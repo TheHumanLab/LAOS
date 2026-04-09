@@ -6,17 +6,29 @@
 <title>Life Architecture OS</title>
 
 <style>
-body { font-family: Arial; margin:0; background:#f5f4f1; }
+body { font-family: Arial; margin:0; background:#f5f4f1; color:#1a1916;}
 .topbar { background:#111; color:#fff; padding:15px; display:flex; justify-content:space-between;}
-.sidebar { width:220px; position:fixed; top:50px; bottom:0; background:#fff; border-right:1px solid #ddd;}
+.sidebar { width:230px; position:fixed; top:50px; bottom:0; background:#fff; border-right:1px solid #ddd;}
 .sidebar button { width:100%; padding:12px; border:none; background:none; text-align:left; cursor:pointer;}
 .sidebar button:hover { background:#eee;}
-.main { margin-left:220px; padding:20px;}
-.card { background:#fff; padding:15px; margin-bottom:12px; border-radius:10px; border:1px solid #eee;}
-.alert { background:#ffeaea; padding:10px; border-radius:8px; color:#900;}
+.main { margin-left:230px; padding:20px;}
+
+.card { background:#fff; padding:16px; margin-bottom:12px; border-radius:10px; border:1px solid #eee;}
+h2 { margin-top:0; }
+
+textarea, input {
+  width:100%; padding:8px; margin-top:6px;
+}
+
+button.primary {
+  background:#111; color:#fff; border:none; padding:8px 12px; cursor:pointer;
+}
+
+.metric { font-size:32px; }
+
+.alert { background:#ffeaea; padding:10px; border-radius:8px; color:#900; margin-bottom:10px;}
 .good { background:#e8f7ee; color:#1b5e20;}
-textarea, input { width:100%; padding:8px; margin-top:6px;}
-button.primary { background:#111; color:#fff; border:none; padding:8px 12px; cursor:pointer;}
+
 .small { font-size:12px; color:#666;}
 </style>
 </head>
@@ -25,12 +37,14 @@ button.primary { background:#111; color:#fff; border:none; padding:8px 12px; cur
 
 <div class="topbar">
   <div>Life Architecture OS</div>
-  <div>Intelligence Engine Active</div>
+  <div>Structural Intelligence Active</div>
 </div>
 
 <div class="sidebar">
-  <button onclick="show('dashboard')">System</button>
+  <button onclick="show('dashboard')">Dashboard</button>
+  <button onclick="show('identity')">Identity</button>
   <button onclick="show('behavior')">Behavior</button>
+  <button onclick="show('decisions')">Decisions</button>
   <button onclick="show('tension')">Tension</button>
   <button onclick="show('patterns')">Patterns</button>
 </div>
@@ -40,55 +54,74 @@ button.primary { background:#111; color:#fff; border:none; padding:8px 12px; cur
 <!-- DASHBOARD -->
 <div id="dashboard" class="module">
   <div class="card">
+    <h2>System State</h2>
     <div>SIQ</div>
-    <div style="font-size:40px" id="siq">0</div>
-  </div>
-
-  <div class="card">
-    <div>Structural Load</div>
-    <div id="load">0%</div>
+    <div class="metric" id="siq">0</div>
+    <div>Load: <span id="load"></span></div>
   </div>
 
   <div id="osc" class="alert" style="display:none;">
-    ⚠ Oscillation detected (unstable system)
+    Oscillation detected — instability in behavior
   </div>
 
   <div class="card">
-    <div>Prediction</div>
+    <h2>Prediction</h2>
     <div id="prediction" class="small"></div>
   </div>
 
   <div class="card">
-    <div>Recommendation</div>
+    <h2>Recommendation</h2>
     <div id="recommendation" class="small"></div>
+  </div>
+</div>
+
+<!-- IDENTITY -->
+<div id="identity" class="module" style="display:none;">
+  <div class="card">
+    <h2>Identity Nodes</h2>
+    <textarea id="identityInput" placeholder="Define your active identities (Architect, Protector, etc)"></textarea>
+    <button class="primary" onclick="saveIdentity()">Save</button>
   </div>
 </div>
 
 <!-- BEHAVIOR -->
 <div id="behavior" class="module" style="display:none;">
   <div class="card">
-    <div>Log Input → Output</div>
+    <h2>Log Behavior</h2>
     <input id="input" placeholder="Input (e.g. poor sleep)">
     <input id="output" placeholder="Output (e.g. low focus)">
-    <button class="primary" onclick="add()">Save</button>
+    <button class="primary" onclick="addBehavior()">Save</button>
   </div>
-  <div id="log"></div>
+
+  <div id="behaviorLog"></div>
+</div>
+
+<!-- DECISIONS -->
+<div id="decisions" class="module" style="display:none;">
+  <div class="card">
+    <h2>Log Decision</h2>
+    <input id="decisionInput" placeholder="Decision made">
+    <button class="primary" onclick="addDecision()">Save</button>
+  </div>
+
+  <div id="decisionLog"></div>
 </div>
 
 <!-- TENSION -->
 <div id="tension" class="module" style="display:none;">
   <div class="card">
-    <div>Current Reality</div>
+    <h2>Current Reality</h2>
     <textarea id="reality"></textarea>
   </div>
-  <div class="card">
-    <div>Desired State</div>
-    <textarea id="vision"></textarea>
-  </div>
-  <button class="primary" onclick="saveTension()">Save</button>
 
   <div class="card">
-    <div>Tension Score</div>
+    <h2>Desired State</h2>
+    <textarea id="vision"></textarea>
+    <button class="primary" onclick="saveTension()">Save</button>
+  </div>
+
+  <div class="card">
+    <h2>Tension Score</h2>
     <div id="tensionScore"></div>
   </div>
 </div>
@@ -96,7 +129,7 @@ button.primary { background:#111; color:#fff; border:none; padding:8px 12px; cur
 <!-- PATTERNS -->
 <div id="patterns" class="module" style="display:none;">
   <div class="card">
-    <div>Patterns</div>
+    <h2>Detected Patterns</h2>
     <div id="patternsList"></div>
   </div>
 </div>
@@ -105,53 +138,59 @@ button.primary { background:#111; color:#fff; border:none; padding:8px 12px; cur
 
 <script>
 
-/* ========= DATA ========= */
-
+/* DATA */
 let data = JSON.parse(localStorage.getItem('os')) || {
-  entries: [],
+  behaviors: [],
+  decisions: [],
+  identity: "",
   reality: "",
   vision: ""
 };
 
-function save() {
-  localStorage.setItem('os', JSON.stringify(data));
-}
+function save(){ localStorage.setItem('os', JSON.stringify(data)); }
 
-/* ========= NAV ========= */
-
+/* NAV */
 function show(id){
   document.querySelectorAll('.module').forEach(m=>m.style.display='none');
   document.getElementById(id).style.display='block';
 }
 
-/* ========= INPUT ========= */
-
-function add(){
-  let input = document.getElementById('input').value.toLowerCase();
-  let output = document.getElementById('output').value.toLowerCase();
-
-  if(!input || !output) return;
-
-  data.entries.push({input, output});
+/* IDENTITY */
+function saveIdentity(){
+  data.identity = document.getElementById('identityInput').value;
   save();
-  render();
 }
 
-/* ========= TENSION ========= */
+/* BEHAVIOR */
+function addBehavior(){
+  let input = document.getElementById('input').value.toLowerCase();
+  let output = document.getElementById('output').value.toLowerCase();
+  if(!input || !output) return;
 
+  data.behaviors.push({input, output});
+  save(); render();
+}
+
+/* DECISIONS */
+function addDecision(){
+  let d = document.getElementById('decisionInput').value;
+  if(!d) return;
+  data.decisions.push(d);
+  save(); render();
+}
+
+/* TENSION */
 function saveTension(){
   data.reality = document.getElementById('reality').value.toLowerCase();
   data.vision = document.getElementById('vision').value.toLowerCase();
-  save();
-  render();
+  save(); render();
 }
 
-/* ========= ENGINE ========= */
-
+/* ENGINE */
 function run(){
 
-  let entries = data.entries;
-  if(entries.length < 3) return;
+  let entries = data.behaviors;
+  if(entries.length < 2) return;
 
   let map = {};
   let inputMap = {};
@@ -165,10 +204,8 @@ function run(){
   });
 
   let patterns = Object.entries(map).filter(p=>p[1]>=2);
+  let oscillation = Object.values(inputMap).some(s=>s.size>1);
 
-  let oscillation = Object.values(inputMap).some(set=>set.size>1);
-
-  /* SIQ */
   let siq = Math.min(100,
     patterns.length*20 +
     (oscillation?0:30) +
@@ -176,11 +213,7 @@ function run(){
   );
 
   document.getElementById('siq').innerText=Math.round(siq);
-
-  /* LOAD */
-  let load = Math.min(100, entries.length*6);
-  document.getElementById('load').innerText=load+"%";
-
+  document.getElementById('load').innerText=(entries.length*6)+"%";
   document.getElementById('osc').style.display=oscillation?'block':'none';
 
   /* TENSION */
@@ -191,65 +224,64 @@ function run(){
   document.getElementById('tensionScore').innerText = tension;
 
   /* PREDICTION */
-  let prediction = "No clear trajectory yet.";
-  if(patterns.length){
-    prediction = "Current behavior patterns will likely continue. Outcome stability depends on oscillation.";
-  }
+  let prediction = "System forming...";
   if(oscillation){
-    prediction = "System instability detected. Outputs are inconsistent — burnout or failure likely if unchanged.";
+    prediction = "Unstable system — inconsistent outputs will lead to failure if unchanged.";
+  } else if(patterns.length){
+    prediction = "Stable pattern detected — current trajectory will continue.";
   }
-
   document.getElementById('prediction').innerText = prediction;
 
   /* RECOMMENDATION */
   let rec = "No intervention needed.";
 
   if(oscillation){
-    rec = "Stabilize inputs. Reduce variability in environment or routine.";
+    rec = "Stabilise inputs. Reduce environmental variability.";
   }
-
-  if(load > 70){
-    rec = "Reduce load. Remove at least one repeated input causing strain.";
-  }
-
   if(tension > 20){
-    rec = "High tension: your current behavior does not match your desired state. Adjust structure, not effort.";
+    rec = "Your behaviour does not match your desired state. Change structure.";
   }
-
   document.getElementById('recommendation').innerText = rec;
 
   /* PATTERNS UI */
-  let list = document.getElementById('patternsList');
+  let list=document.getElementById('patternsList');
   list.innerHTML='';
   patterns.forEach(p=>{
-    let div=document.createElement('div');
-    div.className='card';
-    div.innerText=p[0]+" ("+p[1]+"x)";
-    list.appendChild(div);
+    let d=document.createElement('div');
+    d.className='card';
+    d.innerText=p[0]+" ("+p[1]+"x)";
+    list.appendChild(d);
   });
 }
 
-/* ========= RENDER ========= */
-
+/* RENDER */
 function render(){
-  renderLog();
-  run();
-}
 
-function renderLog(){
-  let log=document.getElementById('log');
+  document.getElementById('identityInput').value = data.identity;
+  document.getElementById('reality').value = data.reality;
+  document.getElementById('vision').value = data.vision;
+
+  let log=document.getElementById('behaviorLog');
   log.innerHTML='';
-  data.entries.slice().reverse().forEach(e=>{
+  data.behaviors.slice().reverse().forEach(e=>{
     let d=document.createElement('div');
     d.className='card';
     d.innerText=e.input+" → "+e.output;
     log.appendChild(d);
   });
+
+  let dlog=document.getElementById('decisionLog');
+  dlog.innerHTML='';
+  data.decisions.slice().reverse().forEach(d=>{
+    let div=document.createElement('div');
+    div.className='card';
+    div.innerText=d;
+    dlog.appendChild(div);
+  });
+
+  run();
 }
 
-/* INIT */
-document.getElementById('reality').value=data.reality;
-document.getElementById('vision').value=data.vision;
 render();
 
 </script>
