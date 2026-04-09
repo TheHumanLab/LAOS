@@ -1,848 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Architecture OS</title>
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400&display=swap');
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#f5f4f1;--bg2:#eceae6;--bg3:#e2dfd9;
-  --surface:#fff;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.13);
-  --text:#1a1916;--text2:#6b6860;--text3:#a09d97;
-  --green:#2d6a4f;--green-bg:#eaf4ee;
-  --amber:#92400e;--amber-bg:#fef3c7;
-  --blue:#1e40af;--blue-bg:#eff6ff;
-  --red:#9b1c1c;--red-bg:#fef2f2;
-  --purple:#5b21b6;--purple-bg:#f5f3ff;
-  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
-  --r:10px;--r2:14px;
-}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;font-size:13px}
-
-/* TOP BAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-mark{width:28px;height:28px;background:var(--text);border-radius:6px;display:flex;align-items:center;justify-content:center}
-.logo-mark svg{width:14px;height:14px}
-.logo-name{font-size:13px;font-weight:500}
-.logo-sub{font-size:11px;color:var(--text3);font-family:var(--mono)}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.sys-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
-.avatar{width:28px;height:28px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--text2)}
-
-/* LAYOUT */
-.layout{display:flex;flex:1;height:calc(100vh - 49px);overflow:hidden}
-.sidebar{width:208px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:14px 10px;gap:1px;overflow-y:auto;flex-shrink:0}
-.sidebar-section{font-size:10px;font-family:var(--mono);color:var(--text3);letter-spacing:0.07em;text-transform:uppercase;padding:12px 10px 4px;margin-top:2px}
-.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--text2);font-size:12.5px;transition:all 0.14s;border:none;background:none;width:100%;text-align:left}
-.nav-item:hover{background:var(--bg);color:var(--text)}
-.nav-item.active{background:var(--text);color:#fff}
-.nav-icon{width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;opacity:0.7}
-.nav-item.active .nav-icon{opacity:1}
-.nav-badge{margin-left:auto;font-size:10px;font-family:var(--mono);background:var(--bg2);border-radius:4px;padding:1px 5px;color:var(--text3)}
-.nav-item.active .nav-badge{background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.65)}
-
-.main{flex:1;overflow-y:auto;padding:24px}
-.module{display:none}
-.module.active{display:block}
-
-/* HEADER */
-.module-header{margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.module-title{font-size:19px;font-weight:500;line-height:1.2}
-.module-sub{font-size:12px;color:var(--text3);margin-top:3px;line-height:1.5}
-.module-actions{display:flex;gap:6px;flex-shrink:0}
-.btn{padding:6px 13px;border-radius:7px;font-size:12px;font-family:var(--font);cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text2);transition:all 0.14s}
-.btn:hover{background:var(--bg2);color:var(--text)}
-.btn-primary{background:var(--text);color:#fff;border-color:var(--text)}
-.btn-primary:hover{background:#333}
-
-/* CARDS */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:16px}
-.card-label{font-size:11px;color:var(--text3);margin-bottom:8px}
-.card-value{font-size:26px;font-weight:400;line-height:1}
-.card-delta{font-size:11px;margin-top:5px;color:var(--green)}
-
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.grid-cols{display:grid;grid-template-columns:1fr 310px;gap:12px}
-
-.section{margin-bottom:16px}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.section-title{font-size:12px;font-weight:500}
-.section-link{font-size:11px;color:var(--text3);cursor:pointer;border:none;background:none;padding:0}
-.section-link:hover{color:var(--text2)}
-.divider{height:1px;background:var(--border);margin:12px 0}
-
-/* TAGS */
-.tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;font-family:var(--mono)}
-.tag-green{background:var(--green-bg);color:var(--green)}
-.tag-amber{background:var(--amber-bg);color:var(--amber)}
-.tag-blue{background:var(--blue-bg);color:var(--blue)}
-.tag-red{background:var(--red-bg);color:var(--red)}
-.tag-purple{background:var(--purple-bg);color:var(--purple)}
-.tag-gray{background:var(--bg2);color:var(--text2)}
-
-/* SCORE BANNER */
-.score-banner{background:var(--text);color:#fff;border-radius:var(--r2);padding:22px 24px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-.score-num{font-size:52px;font-weight:300;letter-spacing:-2px;line-height:1}
-.score-caption{font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px}
-.score-change{font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px}
-.score-dims{display:flex;gap:24px}
-.dim{text-align:center}
-.dim-val{font-size:20px;font-weight:400}
-.dim-name{font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px}
-
-/* HABITS */
-.habit-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
-.habit-row:last-child{border-bottom:none}
-.habit-name{flex:1;font-size:12.5px}
-.habit-streak{font-size:11px;color:var(--text3);min-width:44px;text-align:right}
-.habit-dots{display:flex;gap:3px}
-.dot{width:8px;height:8px;border-radius:2px;background:var(--bg3)}
-.dot.done{background:var(--text)}
-
-/* TIMELINE */
-.tl-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
-.tl-item:last-child{border-bottom:none}
-.tl-time{font-size:10px;color:var(--text3);min-width:36px;padding-top:2px}
-.tl-title{font-size:12.5px}
-.tl-meta{font-size:11px;color:var(--text3);margin-top:2px}
-
-/* INSIGHT PANEL */
-.insight{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;margin-bottom:12px}
-.insight-label{font-size:10px;font-family:var(--mono);color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px}
-.insight-text{font-size:12.5px;color:var(--text);line-height:1.65}
-
-/* PROMPT CARD */
-.prompt-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--text);border-radius:0 var(--r) var(--r) 0;padding:12px 14px;margin-bottom:8px}
-.prompt-q{font-size:13px;color:var(--text);line-height:1.5;font-style:italic}
-.prompt-meta{font-size:11px;color:var(--text3);margin-top:6px}
-.prompt-input{margin-top:8px;width:100%;padding:7px 10px;border-radius:7px;border:1px solid var(--border2);background:var(--bg);font-family:var(--font);font-size:12px;color:var(--text);outline:none;resize:none}
-.prompt-input:focus{border-color:var(--text)}
-
-/* BEHAVIOR LOG */
-.log-entry{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px}
-.log-entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.log-entry-title{font-size:12.5px;font-weight:500}
-.log-entry-time{font-size:10px;color:var(--text3)}
-.log-kv{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.kv-item{background:var(--bg);border-radius:6px;padding:6px 9px}
-.kv-key{font-size:10px;color:var(--text3);margin-bottom:2px}
-.kv-val{font-size:12px;color:var(--text)}
-
-/* CORRELATION */
-.corr-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
-.corr-row:last-child{border-bottom:none}
-.corr-in{flex:1;font-size:12px;color:var(--text)}
-.corr-arrow{color:var(--text3);font-size:12px}
-.corr-out{flex:1;font-size:12px;color:var(--text)}
-.corr-pct{font-size:11px;font-family:var(--mono);color:var(--green);min-width:30px;text-align:right}
-
-/* DECISION */
-.decision-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color 0.14s}
-.decision-card:hover{border-color:var(--border2)}
-.decision-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.decision-q{font-size:13px;font-weight:500;line-height:1.4;flex:1}
-.decision-meta{display:flex;align-items:center;gap:8px;margin-top:7px}
-.decision-date{font-size:11px;color:var(--text3)}
-.decision-logic{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.55}
-.bias-flag{display:inline-flex;align-items:center;gap:3px;font-size:10px;background:var(--amber-bg);color:var(--amber);border-radius:4px;padding:2px 6px;font-family:var(--mono)}
-
-/* GOAL */
-.goal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;margin-bottom:10px}
-.goal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.goal-title{font-size:13px;font-weight:500}
-.progress-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:8px}
-.progress-fill{height:100%;border-radius:2px;background:var(--text)}
-.milestones{display:flex;flex-direction:column;gap:5px;margin-top:10px}
-.milestone{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)}
-.ms-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px}
-.ms-check.done{background:var(--text);border-color:var(--text);color:#fff}
-
-/* VALUE CARD */
-.value-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px}
-.value-top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.value-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.value-name{font-size:12.5px;font-weight:500;flex:1}
-.value-desc{font-size:11.5px;color:var(--text3);line-height:1.5}
-.bar-wrap{height:2px;background:var(--bg3);border-radius:1px;margin-top:8px;overflow:hidden}
-.bar-fill{height:100%;background:var(--text);border-radius:1px}
-
-/* SLIDER */
-.id-slider-row{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.id-slider-label{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text)}
-.id-slider-val{font-family:var(--mono);color:var(--text3);font-size:11px}
-input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--bg3);border-radius:2px;outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text);cursor:pointer}
-
-/* ANALYSIS BAR */
-.analysis-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
-.analysis-row:last-child{border-bottom:none}
-.analysis-label{font-size:12px;flex:1}
-.a-bar{width:80px;background:var(--bg3);border-radius:2px;height:4px;overflow:hidden}
-.a-fill{height:100%;background:var(--text);border-radius:2px}
-.a-val{font-size:11px;font-family:var(--mono);color:var(--text3);min-width:28px;text-align:right}
-
-/* FLAG ROW */
-.flag-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)}
-.flag-row:last-child{border-bottom:none}
-
-/* FORM */
-.text-input{width:100%;padding:8px 11px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);font-family:var(--font);font-size:12.5px;color:var(--text);outline:none}
-.text-input:focus{border-color:var(--text)}
-.text-input::placeholder{color:var(--text3)}
-textarea.text-input{resize:none;line-height:1.6}
-.mood-btn{padding:5px 10px;border-radius:6px;font-size:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text2);transition:all 0.12s;font-family:var(--font)}
-.mood-btn:hover,.mood-btn.sel{background:var(--text);color:#fff;border-color:var(--text)}
-
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+body { font-family: Arial; margin:0; background:#f5f4f1; }
+.topbar { background:#111; color:#fff; padding:15px; display:flex; justify-content:space-between;}
+.sidebar { width:220px; position:fixed; top:50px; bottom:0; background:#fff; border-right:1px solid #ddd;}
+.sidebar button { width:100%; padding:12px; border:none; background:none; text-align:left; cursor:pointer;}
+.sidebar button:hover { background:#eee;}
+.main { margin-left:220px; padding:20px;}
+.card { background:#fff; padding:15px; margin-bottom:12px; border-radius:10px; border:1px solid #eee;}
+.alert { background:#ffeaea; padding:10px; border-radius:8px; color:#900;}
+.good { background:#e8f7ee; color:#1b5e20;}
+textarea, input { width:100%; padding:8px; margin-top:6px;}
+button.primary { background:#111; color:#fff; border:none; padding:8px 12px; cursor:pointer;}
+.small { font-size:12px; color:#666;}
 </style>
+</head>
 
-<!-- TOP BAR -->
+<body>
+
 <div class="topbar">
-  <div class="logo">
-    <div class="logo-mark">
-      <svg viewBox="0 0 14 14" fill="none">
-        <rect x="1" y="1" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
-        <rect x="8" y="1" width="5" height="5" rx="1" fill="white" opacity="0.45"/>
-        <rect x="1" y="8" width="5" height="5" rx="1" fill="white" opacity="0.45"/>
-        <rect x="8" y="8" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
-      </svg>
-    </div>
-    <div>
-      <div class="logo-name">Life Architecture OS</div>
-      <div class="logo-sub">your personal command system</div>
-    </div>
-  </div>
-  <div class="topbar-right">
-    <div class="sys-status"><div class="status-dot"></div>Running smoothly</div>
-    <div class="avatar">JD</div>
-  </div>
+  <div>Life Architecture OS</div>
+  <div>Intelligence Engine Active</div>
 </div>
 
-<div class="layout">
-<!-- SIDEBAR -->
 <div class="sidebar">
-  <div class="sidebar-section">Your OS</div>
-  <button class="nav-item active" onclick="nav(this,'dashboard')"><div class="nav-icon">◉</div>Overview</button>
-  <button class="nav-item" onclick="nav(this,'identity')"><div class="nav-icon">◈</div>Who I Am</button>
-  <button class="nav-item" onclick="nav(this,'behavior')"><div class="nav-icon">◌</div>How I React</button>
-  <button class="nav-item" onclick="nav(this,'decisions')"><div class="nav-icon">◧</div>My Decisions</button>
-  <button class="nav-item" onclick="nav(this,'planner')"><div class="nav-icon">◫</div>My Goals</button>
-  <div class="sidebar-section">Reflect</div>
-  <button class="nav-item" onclick="nav(this,'prompts')"><div class="nav-icon">◎</div>Daily Questions<span class="nav-badge">5</span></button>
-  <button class="nav-item" onclick="nav(this,'weekly')"><div class="nav-icon">◷</div>Weekly Review</button>
-  <button class="nav-item" onclick="nav(this,'patterns')"><div class="nav-icon">◑</div>What I've Noticed<span class="nav-badge">3</span></button>
-  <div class="sidebar-section">Settings</div>
-  <button class="nav-item" onclick="nav(this,'settings')"><div class="nav-icon">◈</div>Preferences</button>
+  <button onclick="show('dashboard')">System</button>
+  <button onclick="show('behavior')">Behavior</button>
+  <button onclick="show('tension')">Tension</button>
+  <button onclick="show('patterns')">Patterns</button>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
-<!-- ══ OVERVIEW ══ -->
-<div class="module active" id="mod-dashboard">
-  <div class="module-header">
-    <div>
-      <div class="module-title">Good morning, J.</div>
-      <div class="module-sub">Thursday, 10 April 2026 · Here's how your life system looks today.</div>
-    </div>
-    <div class="module-actions">
-      <button class="btn">Export</button>
-      <button class="btn btn-primary">+ Add Today's Entry</button>
-    </div>
+<!-- DASHBOARD -->
+<div id="dashboard" class="module">
+  <div class="card">
+    <div>SIQ</div>
+    <div style="font-size:40px" id="siq">0</div>
   </div>
 
-  <!-- Score banner -->
-  <div class="score-banner">
-    <div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">How aligned your life is right now</div>
-      <div style="display:flex;align-items:baseline;gap:8px">
-        <div class="score-num">74</div>
-        <div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.5)">/100</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px">↑ Up 6 points this week</div>
-        </div>
-      </div>
-    </div>
-    <div class="score-dims">
-      <div class="dim"><div class="dim-val">81</div><div class="dim-name">Self-Clarity</div></div>
-      <div class="dim"><div class="dim-val">68</div><div class="dim-name">Reactions</div></div>
-      <div class="dim"><div class="dim-val">71</div><div class="dim-name">Decisions</div></div>
-      <div class="dim"><div class="dim-val">77</div><div class="dim-name">Goals</div></div>
-    </div>
+  <div class="card">
+    <div>Structural Load</div>
+    <div id="load">0%</div>
   </div>
 
-  <!-- Quick stats -->
-  <div class="grid-4 section">
-    <div class="card">
-      <div class="card-label">Habits I'm tracking</div>
-      <div class="card-value">6</div>
-      <div class="card-delta">4 done today</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Decisions I've logged</div>
-      <div class="card-value">23</div>
-      <div class="card-delta" style="color:var(--blue)">2 added this week</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Patterns spotted</div>
-      <div class="card-value">7</div>
-      <div class="card-delta" style="color:var(--amber)">3 worth reviewing</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Goals on track</div>
-      <div class="card-value">3 of 4</div>
-      <div class="card-delta" style="color:var(--amber)">1 needs attention</div>
-    </div>
+  <div id="osc" class="alert" style="display:none;">
+    ⚠ Oscillation detected (unstable system)
   </div>
 
-  <div class="grid-cols">
-    <div>
-      <!-- Insight -->
-      <div class="insight">
-        <div class="insight-label">Today's key insight</div>
-        <div class="insight-text">You do your best work on days when you sleep 7+ hours and start focused work before 9am — this shows up in 82% of your entries over the last 30 days. Protect that morning window.</div>
-      </div>
+  <div class="card">
+    <div>Prediction</div>
+    <div id="prediction" class="small"></div>
+  </div>
 
-      <!-- Habits -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">Today's habits</div>
-          <button class="section-link" onclick="navBtn('planner')">→ see all goals</button>
-        </div>
-        <div class="card">
-          <div class="habit-row">
-            <div class="habit-name">Focused work in the morning</div>
-            <div class="habit-dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot"></div><div class="dot"></div></div>
-            <div class="habit-streak">5 days ↑</div>
-          </div>
-          <div class="habit-row">
-            <div class="habit-name">No phone before 9am</div>
-            <div class="habit-dots"><div class="dot done"></div><div class="dot done"></div><div class="dot"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot"></div></div>
-            <div class="habit-streak">4 days ↑</div>
-          </div>
-          <div class="habit-row">
-            <div class="habit-name">Evening reflection</div>
-            <div class="habit-dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot"></div></div>
-            <div class="habit-streak">6 days ↑</div>
-          </div>
-          <div class="habit-row">
-            <div class="habit-name">Exercise 30+ minutes</div>
-            <div class="habit-dots"><div class="dot done"></div><div class="dot"></div><div class="dot done"></div><div class="dot done"></div><div class="dot"></div><div class="dot done"></div><div class="dot"></div></div>
-            <div class="habit-streak">2 days ~</div>
-          </div>
-          <div class="habit-row">
-            <div class="habit-name">Read 20 pages</div>
-            <div class="habit-dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div></div>
-            <div class="habit-streak">7 days ↑</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <!-- Today's log -->
-      <div class="section">
-        <div class="section-header"><div class="section-title">What happened today</div><button class="section-link">→ full log</button></div>
-        <div class="card">
-          <div class="tl-item"><div class="tl-time">07:30</div><div><div class="tl-title">Morning check-in done</div><div class="tl-meta"><span class="tag tag-green">Energy: High</span></div></div></div>
-          <div class="tl-item"><div class="tl-time">09:15</div><div><div class="tl-title">Turned down project X</div><div class="tl-meta"><span class="tag tag-blue">Decision logged</span></div></div></div>
-          <div class="tl-item"><div class="tl-time">13:00</div><div><div class="tl-title">Energy dip after lunch</div><div class="tl-meta"><span class="tag tag-amber">Behaviour noted</span></div></div></div>
-          <div class="tl-item"><div class="tl-time">16:45</div><div><div class="tl-title">Recovered focus with a walk</div><div class="tl-meta"><span class="tag tag-green">Pattern confirmed</span></div></div></div>
-        </div>
-      </div>
-
-      <!-- Flags -->
-      <div class="section">
-        <div class="section-header"><div class="section-title">Things that need your attention</div></div>
-        <div class="card">
-          <div class="flag-row">
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:500;color:var(--amber)">⚑ You may be holding on to a bad decision</div>
-              <div style="font-size:11px;color:var(--text3);margin-top:2px">Sunk cost pattern spotted in 2 recent choices</div>
-            </div>
-            <span class="tag tag-amber">Review</span>
-          </div>
-          <div class="flag-row">
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:500;color:var(--blue)">◎ Your "Who I Am" section is getting outdated</div>
-              <div style="font-size:11px;color:var(--text3);margin-top:2px">Last updated 47 days ago — you've changed since then</div>
-            </div>
-            <span class="tag tag-blue">Update</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="card">
+    <div>Recommendation</div>
+    <div id="recommendation" class="small"></div>
   </div>
 </div>
 
-<!-- ══ WHO I AM ══ -->
-<div class="module" id="mod-identity">
-  <div class="module-header">
-    <div>
-      <div class="module-title">Who I Am</div>
-      <div class="module-sub">Your values, strengths, and the way you're wired — updated as you grow.</div>
-    </div>
-    <div class="module-actions">
-      <button class="btn">See past versions</button>
-      <button class="btn btn-primary">Update my profile</button>
-    </div>
+<!-- BEHAVIOR -->
+<div id="behavior" class="module" style="display:none;">
+  <div class="card">
+    <div>Log Input → Output</div>
+    <input id="input" placeholder="Input (e.g. poor sleep)">
+    <input id="output" placeholder="Output (e.g. low focus)">
+    <button class="primary" onclick="add()">Save</button>
   </div>
+  <div id="log"></div>
+</div>
 
-  <div class="grid-cols">
-    <div>
-      <div class="section">
-        <div class="section-header"><div class="section-title">What matters most to me</div></div>
-        <div class="value-card">
-          <div class="value-top"><div class="value-dot" style="background:#1a1916"></div><div class="value-name">Freedom &amp; Independence</div><span class="tag tag-gray" style="margin-left:auto">Top value</span></div>
-          <div class="value-desc">I need to be in control of my time and decisions. I lose energy fast when I feel trapped or micromanaged.</div>
-          <div class="bar-wrap"><div class="bar-fill" style="width:92%"></div></div>
-        </div>
-        <div class="value-card">
-          <div class="value-top"><div class="value-dot" style="background:#1e40af"></div><div class="value-name">Getting Really Good at Things</div><span class="tag tag-blue" style="margin-left:auto">Top value</span></div>
-          <div class="value-desc">I care deeply about depth, not breadth. I'd rather be excellent at a few things than average at many.</div>
-          <div class="bar-wrap"><div class="bar-fill" style="width:85%"></div></div>
-        </div>
-        <div class="value-card">
-          <div class="value-top"><div class="value-dot" style="background:#2d6a4f"></div><div class="value-name">Making a Real Difference</div><span class="tag tag-green" style="margin-left:auto">Core value</span></div>
-          <div class="value-desc">I'm motivated by seeing my work actually change something. Results matter more to me than the process.</div>
-          <div class="bar-wrap"><div class="bar-fill" style="width:73%"></div></div>
-        </div>
-        <div class="value-card">
-          <div class="value-top"><div class="value-dot" style="background:#5b21b6"></div><div class="value-name">Mental Order &amp; Clarity</div><span class="tag tag-purple" style="margin-left:auto">Core value</span></div>
-          <div class="value-desc">Chaos drains me. I build systems because unclear situations make me uncomfortable.</div>
-          <div class="bar-wrap"><div class="bar-fill" style="width:68%"></div></div>
-        </div>
-      </div>
+<!-- TENSION -->
+<div id="tension" class="module" style="display:none;">
+  <div class="card">
+    <div>Current Reality</div>
+    <textarea id="reality"></textarea>
+  </div>
+  <div class="card">
+    <div>Desired State</div>
+    <textarea id="vision"></textarea>
+  </div>
+  <button class="primary" onclick="saveTension()">Save</button>
 
-      <div class="section">
-        <div class="section-header"><div class="section-title">The different "sides" of me</div></div>
-        <div class="card" style="font-size:12px;color:var(--text2);line-height:1.6">
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div><strong style="color:var(--text);font-weight:500">The Builder</strong> — shows up when I'm creating, planning, or solving problems. Most alive here.</div>
-            <div style="border-top:1px solid var(--border);padding-top:8px"><strong style="color:var(--text);font-weight:500">The Protector</strong> — cautious, risk-aware. Appears when I feel threatened or overwhelmed.</div>
-            <div style="border-top:1px solid var(--border);padding-top:8px"><strong style="color:var(--text);font-weight:500">The Dreamer</strong> — long-term thinker. Gets suppressed when I'm in survival mode.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="section">
-        <div class="section-header"><div class="section-title">How I'm naturally wired</div></div>
-        <div class="card">
-          <div class="id-slider-row">
-            <div class="id-slider-label"><span>More introverted</span><span class="id-slider-val" id="v1">72</span><span>More extroverted</span></div>
-            <input type="range" min="0" max="100" value="72" oninput="document.getElementById('v1').textContent=this.value">
-          </div>
-          <div class="id-slider-row">
-            <div class="id-slider-label"><span>Goes with gut</span><span class="id-slider-val" id="v2">60</span><span>Goes with logic</span></div>
-            <input type="range" min="0" max="100" value="60" oninput="document.getElementById('v2').textContent=this.value">
-          </div>
-          <div class="id-slider-row">
-            <div class="id-slider-label"><span>Reacts to life</span><span class="id-slider-val" id="v3">65</span><span>Plans ahead</span></div>
-            <input type="range" min="0" max="100" value="65" oninput="document.getElementById('v3').textContent=this.value">
-          </div>
-          <div class="id-slider-row">
-            <div class="id-slider-label"><span>Likes to stay flexible</span><span class="id-slider-val" id="v4">70</span><span>Likes structure</span></div>
-            <input type="range" min="0" max="100" value="70" oninput="document.getElementById('v4').textContent=this.value">
-          </div>
-          <div class="id-slider-row" style="margin-bottom:0">
-            <div class="id-slider-label"><span>Plays it safe</span><span class="id-slider-val" id="v5">55</span><span>Takes risks</span></div>
-            <input type="range" min="0" max="100" value="55" oninput="document.getElementById('v5').textContent=this.value">
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-header"><div class="section-title">My strongest abilities</div></div>
-        <div class="card">
-          <div class="analysis-row"><div class="analysis-label">Seeing the big picture</div><div class="a-bar"><div class="a-fill" style="width:90%"></div></div><div class="a-val">90</div></div>
-          <div class="analysis-row"><div class="analysis-label">Thinking clearly under pressure</div><div class="a-bar"><div class="a-fill" style="width:82%"></div></div><div class="a-val">82</div></div>
-          <div class="analysis-row"><div class="analysis-label">Sticking to what I commit to</div><div class="a-bar"><div class="a-fill" style="width:78%"></div></div><div class="a-val">78</div></div>
-          <div class="analysis-row"><div class="analysis-label">Deep, focused work</div><div class="a-bar"><div class="a-fill" style="width:85%"></div></div><div class="a-val">85</div></div>
-          <div class="analysis-row"><div class="analysis-label">Managing my emotions</div><div class="a-bar"><div class="a-fill" style="width:61%"></div></div><div class="a-val">61</div></div>
-          <div class="analysis-row"><div class="analysis-label">Communicating clearly</div><div class="a-bar"><div class="a-fill" style="width:70%"></div></div><div class="a-val">70</div></div>
-        </div>
-      </div>
-
-      <div class="insight">
-        <div class="insight-label">What the data shows</div>
-        <div class="insight-text">Over the last 60 days, you've become noticeably more structured (+12 points). This lines up with all the systems you've been building lately.</div>
-      </div>
-    </div>
+  <div class="card">
+    <div>Tension Score</div>
+    <div id="tensionScore"></div>
   </div>
 </div>
 
-<!-- ══ HOW I REACT ══ -->
-<div class="module" id="mod-behavior">
-  <div class="module-header">
-    <div>
-      <div class="module-title">How I React</div>
-      <div class="module-sub">Track what happens to you (inputs) and how you respond (outputs). Over time, the patterns become clear.</div>
-    </div>
-    <div class="module-actions">
-      <button class="btn">Filter entries</button>
-      <button class="btn btn-primary">+ Log a reaction</button>
-    </div>
-  </div>
-
-  <!-- Log form -->
-  <div class="card section">
-    <div class="card-label">What happened — and how did you respond?</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">What happened? (the situation)</div>
-        <input class="text-input" placeholder="e.g. Bad night's sleep, skipped breakfast, tough meeting…">
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">How did you respond? (your reaction)</div>
-        <input class="text-input" placeholder="e.g. Short-tempered, couldn't focus, avoided calls…">
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div style="font-size:11px;color:var(--text3)">Energy level:</div>
-      <button class="mood-btn" onclick="selectMood(this)">1 — Drained</button>
-      <button class="mood-btn" onclick="selectMood(this)">2 — Low</button>
-      <button class="mood-btn sel" onclick="selectMood(this)">3 — Okay</button>
-      <button class="mood-btn" onclick="selectMood(this)">4 — Good</button>
-      <button class="mood-btn" onclick="selectMood(this)">5 — Excellent</button>
-      <button class="btn btn-primary" style="margin-left:auto">Save</button>
-    </div>
-  </div>
-
-  <div class="grid-cols">
-    <div>
-      <div class="section">
-        <div class="section-header"><div class="section-title">Recent entries</div></div>
-        <div class="log-entry">
-          <div class="log-entry-header"><div class="log-entry-title">Great focused work session</div><div class="log-entry-time">Today, 09:00</div></div>
-          <div class="log-kv">
-            <div class="kv-item"><div class="kv-key">What happened</div><div class="kv-val">8h sleep, early start, no meetings</div></div>
-            <div class="kv-item"><div class="kv-key">My response</div><div class="kv-val">4.5 hours of clear, focused thinking</div></div>
-            <div class="kv-item"><div class="kv-key">Setting</div><div class="kv-val">Home office, quiet, morning</div></div>
-            <div class="kv-item"><div class="kv-key">Energy</div><div class="kv-val">5 — Excellent</div></div>
-          </div>
-        </div>
-        <div class="log-entry">
-          <div class="log-entry-header"><div class="log-entry-title">Felt drained after a social event</div><div class="log-entry-time">Yesterday, 21:30</div></div>
-          <div class="log-kv">
-            <div class="kv-item"><div class="kv-key">What happened</div><div class="kv-val">3-hour group gathering, loud room</div></div>
-            <div class="kv-item"><div class="kv-key">My response</div><div class="kv-val">Mental fatigue, needed alone time</div></div>
-            <div class="kv-item"><div class="kv-key">Setting</div><div class="kv-val">External venue, crowded</div></div>
-            <div class="kv-item"><div class="kv-key">Energy</div><div class="kv-val">2 — Low</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="section">
-        <div class="section-header"><div class="section-title">Patterns the OS has found</div></div>
-        <div class="card">
-          <div class="corr-row"><div class="corr-in">Sleep 7h+</div><div class="corr-arrow">→</div><div class="corr-out">4+ hours of deep focus</div><div class="corr-pct">82%</div></div>
-          <div class="corr-row"><div class="corr-in">Skip breakfast</div><div class="corr-arrow">→</div><div class="corr-out">Irritable by midday</div><div class="corr-pct" style="color:var(--red)">74%</div></div>
-          <div class="corr-row"><div class="corr-in">Morning walk</div><div class="corr-arrow">→</div><div class="corr-out">Calmer decisions all day</div><div class="corr-pct">78%</div></div>
-          <div class="corr-row"><div class="corr-in">Social event 3h+</div><div class="corr-arrow">→</div><div class="corr-out">Need 2h alone to recover</div><div class="corr-pct" style="color:var(--amber)">90%</div></div>
-          <div class="corr-row"><div class="corr-in">Screens late at night</div><div class="corr-arrow">→</div><div class="corr-out">Slow, foggy next morning</div><div class="corr-pct" style="color:var(--red)">86%</div></div>
-        </div>
-      </div>
-      <div class="insight">
-        <div class="insight-label">What this tells us</div>
-        <div class="insight-text">You recharge alone. Long social events consistently drain your mental energy by ~40% for the following 12 hours. This is normal for introverts — the key is scheduling recovery time after them.</div>
-      </div>
-    </div>
+<!-- PATTERNS -->
+<div id="patterns" class="module" style="display:none;">
+  <div class="card">
+    <div>Patterns</div>
+    <div id="patternsList"></div>
   </div>
 </div>
 
-<!-- ══ MY DECISIONS ══ -->
-<div class="module" id="mod-decisions">
-  <div class="module-header">
-    <div>
-      <div class="module-title">My Decisions</div>
-      <div class="module-sub">Every major decision you log — plus the thinking behind it. Over time, you'll see where your logic is strong and where it slips.</div>
-    </div>
-    <div class="module-actions">
-      <button class="btn">Filter</button>
-      <button class="btn btn-primary">+ Log a decision</button>
-    </div>
-  </div>
-
-  <div class="grid-cols">
-    <div>
-      <div class="section">
-        <div class="section-header"><div class="section-title">Decision history</div></div>
-
-        <div class="decision-card">
-          <div class="decision-top">
-            <div class="decision-q">Turned down a partnership offer from Agency X</div>
-            <span class="tag tag-green">Good call</span>
-          </div>
-          <div class="decision-meta"><span class="decision-date">09 Apr 2026</span><span class="tag tag-gray">Work</span></div>
-          <div class="decision-logic">My thinking: The offer would have taken away my independence — my most important value. The money wasn't worth the loss of control. I used my values as the filter.</div>
-        </div>
-
-        <div class="decision-card">
-          <div class="decision-top">
-            <div class="decision-q">Kept paying for a course even though results were slow</div>
-            <span class="tag tag-amber">Still reviewing</span>
-          </div>
-          <div class="decision-meta"><span class="decision-date">05 Apr 2026</span><span class="tag tag-gray">Learning</span></div>
-          <div class="decision-logic">My thinking: "I've already paid, I should keep going." <span class="bias-flag">⚑ Watch out — sunk cost thinking</span></div>
-        </div>
-
-        <div class="decision-card">
-          <div class="decision-top">
-            <div class="decision-q">Blocked off mornings — no meetings before 10am</div>
-            <span class="tag tag-green">Done</span>
-          </div>
-          <div class="decision-meta"><span class="decision-date">28 Mar 2026</span><span class="tag tag-gray">Routine</span></div>
-          <div class="decision-logic">My thinking: My data showed mornings are my peak thinking time. Protecting them led to ~40% more focused work. This was a data-driven decision — one of my best.</div>
-        </div>
-
-        <div class="decision-card">
-          <div class="decision-top">
-            <div class="decision-q">Took on a new client when I was already at full capacity</div>
-            <span class="tag tag-red">Bad call</span>
-          </div>
-          <div class="decision-meta"><span class="decision-date">14 Mar 2026</span><span class="tag tag-gray">Work</span></div>
-          <div class="decision-logic">My thinking: The opportunity felt too good to miss. I didn't factor in the mental cost. <span class="bias-flag">⚑ Fear of missing out</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="section">
-        <div class="section-header"><div class="section-title">How well am I deciding?</div></div>
-        <div class="card">
-          <div style="text-align:center;padding:10px 0 14px">
-            <div style="font-size:38px;font-weight:300">71</div>
-            <div style="font-size:11px;color:var(--text3)">average decision quality out of 100</div>
-          </div>
-          <div class="divider"></div>
-          <div class="analysis-row"><div class="analysis-label">Decisions true to my values</div><div class="a-bar"><div class="a-fill" style="width:78%"></div></div><div class="a-val">78%</div></div>
-          <div class="analysis-row"><div class="analysis-label">Based on evidence, not feelings</div><div class="a-bar"><div class="a-fill" style="width:55%"></div></div><div class="a-val">55%</div></div>
-          <div class="analysis-row"><div class="analysis-label">Made without emotional pressure</div><div class="a-bar"><div class="a-fill" style="width:62%"></div></div><div class="a-val">62%</div></div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-header"><div class="section-title">Thinking traps I keep falling into</div></div>
-        <div class="card">
-          <div class="analysis-row"><div class="analysis-label">Sticking with something because I already invested</div><div class="a-bar"><div class="a-fill" style="width:40%;background:var(--amber)"></div></div><div class="a-val" style="color:var(--amber)">3×</div></div>
-          <div class="analysis-row"><div class="analysis-label">Overestimating how well things will go</div><div class="a-bar"><div class="a-fill" style="width:27%;background:var(--amber)"></div></div><div class="a-val" style="color:var(--amber)">2×</div></div>
-          <div class="analysis-row"><div class="analysis-label">Saying yes because I feared missing out</div><div class="a-bar"><div class="a-fill" style="width:27%;background:var(--red)"></div></div><div class="a-val" style="color:var(--red)">2×</div></div>
-          <div class="analysis-row"><div class="analysis-label">Only seeing evidence that backed my view</div><div class="a-bar"><div class="a-fill" style="width:13%"></div></div><div class="a-val">1×</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
-
-<!-- ══ MY GOALS ══ -->
-<div class="module" id="mod-planner">
-  <div class="module-header">
-    <div>
-      <div class="module-title">My Goals</div>
-      <div class="module-sub">Your big targets, broken into steps you can actually act on.</div>
-    </div>
-    <div class="module-actions">
-      <button class="btn">Filter by timeframe</button>
-      <button class="btn btn-primary">+ Add a goal</button>
-    </div>
-  </div>
-  <div class="grid-2">
-    <div class="goal-card">
-      <div class="goal-header"><div class="goal-title">Build the Life Architecture OS</div><span class="tag tag-blue">6 months</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:38%"></div></div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:2px">38% complete · On track</div>
-      <div class="milestones">
-        <div class="milestone"><div class="ms-check done">✓</div>Define the product vision and modules</div>
-        <div class="milestone"><div class="ms-check done">✓</div>Build the "Who I Am" section</div>
-        <div class="milestone"><div class="ms-check done">✓</div>Build the "How I React" tracker</div>
-        <div class="milestone"><div class="ms-check"></div>Finish the Decision log with bias alerts</div>
-        <div class="milestone"><div class="ms-check"></div>Launch a beta with 10 real users</div>
-      </div>
-    </div>
-    <div class="goal-card">
-      <div class="goal-header"><div class="goal-title">4 hours of focused work every day</div><span class="tag tag-green">Ongoing</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:2px">Hit this target 72% of days · Getting better</div>
-      <div class="milestones">
-        <div class="milestone"><div class="ms-check done">✓</div>No meetings before 10am</div>
-        <div class="milestone"><div class="ms-check done">✓</div>Phone out of reach until 9am</div>
-        <div class="milestone"><div class="ms-check done">✓</div>Pomodoro system in place</div>
-        <div class="milestone"><div class="ms-check"></div>Hit a 30-day streak</div>
-      </div>
-    </div>
-    <div class="goal-card">
-      <div class="goal-header"><div class="goal-title">Save enough for 6 months of freedom</div><span class="tag tag-amber">3 months</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:2px">55% there · Needs a push</div>
-      <div class="milestones">
-        <div class="milestone"><div class="ms-check done">✓</div>Reviewed all monthly spending</div>
-        <div class="milestone"><div class="ms-check done">✓</div>Cut 3 subscriptions I wasn't using</div>
-        <div class="milestone"><div class="ms-check"></div>Grow a second income stream</div>
-        <div class="milestone"><div class="ms-check"></div>Hit my monthly savings target</div>
-      </div>
-    </div>
-    <div class="goal-card">
-      <div class="goal-header"><div class="goal-title">Build a strong physical foundation</div><span class="tag tag-purple">Ongoing</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:61%"></div></div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:2px">61% habit adherence · Holding steady</div>
-      <div class="milestones">
-        <div class="milestone"><div class="ms-check done">✓</div>Strength training 3× per week</div>
-        <div class="milestone"><div class="ms-check done">✓</div>Move every single day</div>
-        <div class="milestone"><div class="ms-check"></div>Fix sleep and recovery routine</div>
-        <div class="milestone"><div class="ms-check"></div>90-day strength check-in</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ DAILY QUESTIONS ══ -->
-<div class="module" id="mod-prompts">
-  <div class="module-header">
-    <div>
-      <div class="module-title">Daily Questions</div>
-      <div class="module-sub">Five questions to help you understand yourself a little better each day. Answer honestly — no one else sees this.</div>
-    </div>
-    <div class="module-actions">
-      <button class="btn btn-primary">Save all answers</button>
-    </div>
-  </div>
-
-  <div class="prompt-card">
-    <div class="prompt-q">"In which area of your life — work, home, or social — did you feel most like a different version of yourself today? What was it about that situation that changed you?"</div>
-    <div class="prompt-meta">The Context Check · Helps you spot where your environment is shaping your behaviour</div>
-    <textarea class="prompt-input" rows="2" placeholder="Write your answer here…"></textarea>
-  </div>
-
-  <div class="prompt-card">
-    <div class="prompt-q">"Looking back at yesterday, what one thing — a situation, a person, or a condition — most directly led to your best output?"</div>
-    <div class="prompt-meta">The Input/Output Audit · Helps you identify what actually drives your performance</div>
-    <textarea class="prompt-input" rows="2" placeholder="Write your answer here…"></textarea>
-  </div>
-
-  <div class="prompt-card">
-    <div class="prompt-q">"Before you make your biggest decision today: are you choosing based on who you truly are, or are you reacting to pressure, stress, or fear?"</div>
-    <div class="prompt-meta">The Logic Check · Helps you separate clear thinking from emotional reactions</div>
-    <textarea class="prompt-input" rows="2" placeholder="Write your answer here…"></textarea>
-  </div>
-
-  <div class="prompt-card">
-    <div class="prompt-q">"Where did you feel most uncomfortable or out of place today? What does that discomfort tell you about what you need?"</div>
-    <div class="prompt-meta">The Friction Finder · Helps you understand why you act differently in different situations</div>
-    <textarea class="prompt-input" rows="2" placeholder="Write your answer here…"></textarea>
-  </div>
-
-  <div class="prompt-card">
-    <div class="prompt-q">"What's one small change you can make to your environment tonight — sleep time, screen time, space, or routine — that would set tomorrow up better?"</div>
-    <div class="prompt-meta">The Evening Adjustment · Turns today's reflection into tomorrow's improvement</div>
-    <textarea class="prompt-input" rows="2" placeholder="Write your answer here…"></textarea>
-  </div>
-</div>
-
-<!-- ══ WEEKLY REVIEW ══ -->
-<div class="module" id="mod-weekly">
-  <div class="module-header">
-    <div>
-      <div class="module-title">Weekly Review</div>
-      <div class="module-sub">Week 15 · Apr 7–13, 2026 · Takes about 10 minutes. Worth every one of them.</div>
-    </div>
-    <div class="module-actions"><button class="btn btn-primary">Save this review</button></div>
-  </div>
-  <div class="card section">
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div>
-        <div style="font-size:12.5px;color:var(--text);margin-bottom:6px;font-weight:500">What was your biggest win this week — something you actually did, not just planned?</div>
-        <textarea class="text-input" rows="3" placeholder="Be specific. Small wins count."></textarea>
-      </div>
-      <div>
-        <div style="font-size:12.5px;color:var(--text);margin-bottom:6px;font-weight:500">What behaviour or reaction showed up again this week that you've seen before?</div>
-        <textarea class="text-input" rows="3" placeholder="Look for repetition — that's where patterns live."></textarea>
-      </div>
-      <div>
-        <div style="font-size:12.5px;color:var(--text);margin-bottom:6px;font-weight:500">If you could change one thing about how your week was structured, what would it be?</div>
-        <textarea class="text-input" rows="3" placeholder="Think environment, routine, or relationships."></textarea>
-      </div>
-      <div>
-        <div style="font-size:12.5px;color:var(--text);margin-bottom:6px;font-weight:500">Did your actions this week reflect the person you said you are in "Who I Am"? Where was there a gap?</div>
-        <textarea class="text-input" rows="3" placeholder="Honesty here is more valuable than comfort."></textarea>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ WHAT I'VE NOTICED ══ -->
-<div class="module" id="mod-patterns">
-  <div class="module-header">
-    <div>
-      <div class="module-title">What I've Noticed</div>
-      <div class="module-sub">Patterns the OS has found across your entries. These are based on your actual data — not guesses.</div>
-    </div>
-    <div class="module-actions"><button class="btn btn-primary">Export report</button></div>
-  </div>
-
-  <div class="insight">
-    <div class="insight-label">Your highest-performance pattern</div>
-    <div class="insight-text">Your most productive days share four things in common: 7+ hours of sleep, no social commitments, focused work before 10am, and some physical movement. When all four align, your output quality is roughly 3× your average. This has shown up consistently across 30 days of entries.</div>
-  </div>
-  <div class="insight">
-    <div class="insight-label">A decision pattern worth knowing</div>
-    <div class="insight-text">Decisions you make after 7pm have a 40% higher chance of showing bias than decisions made in the morning. Based on your data, a simple rule — "no major decisions after 7pm" — could improve your decision quality score by around 12 points.</div>
-  </div>
-  <div class="insight">
-    <div class="insight-label">A values gap that keeps appearing</div>
-    <div class="insight-text">In the past 30 days, you said yes to external obligations 6 times in ways that conflicted with your top value: independence. Each time, you logged lower energy the following day. Your boundaries may need reinforcing in one specific area of your life.</div>
-  </div>
-  <div class="insight">
-    <div class="insight-label">How you've changed in the last 60 days</div>
-    <div class="insight-text">You've become measurably more structured, more proactive, and slightly less risk-averse compared to when you first set up your profile. Your values haven't changed — but how you're living them out has. That's growth worth acknowledging.</div>
-  </div>
-</div>
-
-<!-- ══ SETTINGS ══ -->
-<div class="module" id="mod-settings">
-  <div class="module-header">
-    <div><div class="module-title">Preferences</div><div class="module-sub">Adjust how the OS works for you.</div></div>
-  </div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-label">Your profile</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-        <input class="text-input" placeholder="Your name" value="J. Doe">
-        <input class="text-input" placeholder="Your timezone" value="UTC+1 — London">
-        <input class="text-input" placeholder="Evening check-in time" value="21:00">
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-label">How the OS works</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-        <input class="text-input" placeholder="Main goal timeframe" value="6 months">
-        <input class="text-input" placeholder="Habit check-in" value="Every day">
-        <input class="text-input" placeholder="Decision review" value="Every week">
-      </div>
-    </div>
-  </div>
-</div>
-
-</div><!-- /main -->
-</div><!-- /layout -->
 
 <script>
-function nav(btn, id) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
-  document.getElementById('mod-' + id).classList.add('active');
+
+/* ========= DATA ========= */
+
+let data = JSON.parse(localStorage.getItem('os')) || {
+  entries: [],
+  reality: "",
+  vision: ""
+};
+
+function save() {
+  localStorage.setItem('os', JSON.stringify(data));
 }
-function navBtn(id) {
-  const btn = document.querySelector('[onclick*="' + id + '"]');
-  if (btn) nav(btn, id);
+
+/* ========= NAV ========= */
+
+function show(id){
+  document.querySelectorAll('.module').forEach(m=>m.style.display='none');
+  document.getElementById(id).style.display='block';
 }
-function selectMood(btn) {
-  btn.closest('div').querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
+
+/* ========= INPUT ========= */
+
+function add(){
+  let input = document.getElementById('input').value.toLowerCase();
+  let output = document.getElementById('output').value.toLowerCase();
+
+  if(!input || !output) return;
+
+  data.entries.push({input, output});
+  save();
+  render();
 }
+
+/* ========= TENSION ========= */
+
+function saveTension(){
+  data.reality = document.getElementById('reality').value.toLowerCase();
+  data.vision = document.getElementById('vision').value.toLowerCase();
+  save();
+  render();
+}
+
+/* ========= ENGINE ========= */
+
+function run(){
+
+  let entries = data.entries;
+  if(entries.length < 3) return;
+
+  let map = {};
+  let inputMap = {};
+
+  entries.forEach(e=>{
+    let key = e.input+"→"+e.output;
+    map[key]=(map[key]||0)+1;
+
+    if(!inputMap[e.input]) inputMap[e.input]=new Set();
+    inputMap[e.input].add(e.output);
+  });
+
+  let patterns = Object.entries(map).filter(p=>p[1]>=2);
+
+  let oscillation = Object.values(inputMap).some(set=>set.size>1);
+
+  /* SIQ */
+  let siq = Math.min(100,
+    patterns.length*20 +
+    (oscillation?0:30) +
+    Math.log(entries.length+1)*20
+  );
+
+  document.getElementById('siq').innerText=Math.round(siq);
+
+  /* LOAD */
+  let load = Math.min(100, entries.length*6);
+  document.getElementById('load').innerText=load+"%";
+
+  document.getElementById('osc').style.display=oscillation?'block':'none';
+
+  /* TENSION */
+  let tension = 0;
+  if(data.reality && data.vision){
+    tension = Math.abs(data.vision.length - data.reality.length)*2;
+  }
+  document.getElementById('tensionScore').innerText = tension;
+
+  /* PREDICTION */
+  let prediction = "No clear trajectory yet.";
+  if(patterns.length){
+    prediction = "Current behavior patterns will likely continue. Outcome stability depends on oscillation.";
+  }
+  if(oscillation){
+    prediction = "System instability detected. Outputs are inconsistent — burnout or failure likely if unchanged.";
+  }
+
+  document.getElementById('prediction').innerText = prediction;
+
+  /* RECOMMENDATION */
+  let rec = "No intervention needed.";
+
+  if(oscillation){
+    rec = "Stabilize inputs. Reduce variability in environment or routine.";
+  }
+
+  if(load > 70){
+    rec = "Reduce load. Remove at least one repeated input causing strain.";
+  }
+
+  if(tension > 20){
+    rec = "High tension: your current behavior does not match your desired state. Adjust structure, not effort.";
+  }
+
+  document.getElementById('recommendation').innerText = rec;
+
+  /* PATTERNS UI */
+  let list = document.getElementById('patternsList');
+  list.innerHTML='';
+  patterns.forEach(p=>{
+    let div=document.createElement('div');
+    div.className='card';
+    div.innerText=p[0]+" ("+p[1]+"x)";
+    list.appendChild(div);
+  });
+}
+
+/* ========= RENDER ========= */
+
+function render(){
+  renderLog();
+  run();
+}
+
+function renderLog(){
+  let log=document.getElementById('log');
+  log.innerHTML='';
+  data.entries.slice().reverse().forEach(e=>{
+    let d=document.createElement('div');
+    d.className='card';
+    d.innerText=e.input+" → "+e.output;
+    log.appendChild(d);
+  });
+}
+
+/* INIT */
+document.getElementById('reality').value=data.reality;
+document.getElementById('vision').value=data.vision;
+render();
+
 </script>
+
+</body>
+</html>
