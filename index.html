@@ -1,429 +1,542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIFE ARCHITECTURE OS | V1</title>
-    <style>
-        /* 
-           DESIGN SYSTEM: Minimalist, Neutral, Functional 
-           The UI is built to feel like a high-end tool, not a toy.
-        */
-        :root {
-            --bg: #ffffff;
-            --text: #1a1a1a;
-            --text-muted: #666666;
-            --border: #e5e5e5;
-            --accent: #000000;
-            --system-bg: #f9f9f9;
-            --oscillation-color: #ff4d4d;
-            --pattern-color: #0070f3;
-            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life Architecture OS</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #111;
+      --muted: #5c5c5c;
+      --border: #e0e0e0;
+      --accent: #111;
+      --pattern: #1565c0;
+      --osc: #c62828;
+      --radius: 8px;
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: var(--font-main);
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem 1rem;
-        }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+      padding: clamp(1rem, 4vw, 2.5rem);
+    }
 
-        .container {
-            max-width: 650px;
-            width: 100%;
-        }
+    .wrap {
+      max-width: 42rem;
+      margin: 0 auto;
+    }
 
-        header {
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1rem;
-        }
+    header {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
 
-        header h1 {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
+    header h1 {
+      font-size: 1.125rem;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
 
-        header p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
+    header p {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
 
-        /* Input Section */
-        .input-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
 
-        .field-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
+    label {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
 
-        label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
+    textarea {
+      width: 100%;
+      min-height: 5.5rem;
+      padding: 0.85rem 1rem;
+      font: inherit;
+      font-size: 0.9375rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      resize: vertical;
+    }
 
-        textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-family: var(--font-main);
-            font-size: 1rem;
-            resize: vertical;
-            min-height: 80px;
-            transition: border-color 0.2s;
-        }
+    textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
 
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
 
-        button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: opacity 0.2s;
-        }
+    button {
+      font: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+    }
 
-        button:hover {
-            opacity: 0.9;
-        }
+    button:hover { opacity: 0.92; }
 
-        /* Response Panel */
-        #response-panel {
-            background: var(--system-bg);
-            border: 1px solid var(--border);
-            padding: 2rem;
-            margin-bottom: 3rem;
-            display: none; /* Hidden until first submission */
-        }
+    button.secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
 
-        .response-block {
-            margin-bottom: 1.5rem;
-        }
+    #panel {
+      display: none;
+      margin: 2rem 0;
+      padding: 1.25rem 1.35rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
 
-        .response-label {
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 0.25rem;
-        }
+    #panel.visible { display: block; }
 
-        .response-content {
-            font-size: 1rem;
-            font-weight: 400;
-        }
+    .block { margin-bottom: 1.15rem; }
+    .block:last-child { margin-bottom: 0; }
 
-        .response-action {
-            font-weight: 700;
-            border-left: 3px solid var(--accent);
-            padding-left: 1rem;
-        }
+    .block h3 {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
 
-        /* History Section */
-        .history-section h2 {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 0.5rem;
-        }
+    .block p {
+      font-size: 0.9375rem;
+    }
 
-        .entry-card {
-            border: 1px solid var(--border);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
+    .block.action p {
+      font-weight: 600;
+      padding-left: 0.75rem;
+      border-left: 3px solid var(--accent);
+    }
 
-        .entry-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
+    .flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.75rem;
+    }
 
-        .entry-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
+    .flag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+    }
 
-        .tag {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            margin-top: 0.5rem;
-        }
+    .flag.pattern { background: #e3f2fd; color: var(--pattern); }
+    .flag.osc { background: #ffebee; color: var(--osc); }
 
-        .tag-oscillation { background: #ffebeb; color: #d0021b; }
-        .tag-pattern { background: #ebf5ff; color: #0070f3; }
+    section.history {
+      margin-top: 2.5rem;
+    }
 
-        footer {
-            margin-top: 4rem;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-        }
+    section.history h2 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+      color: var(--muted);
+    }
 
-        @media (max-width: 600px) {
-            .entry-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+    .empty {
+      font-size: 0.875rem;
+      color: var(--muted);
+      padding: 1rem 0;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.65rem;
+    }
+
+    .pair {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    @media (min-width: 520px) {
+      .pair { grid-template-columns: 1fr 1fr; }
+    }
+
+    .pair strong {
+      display: block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <h1>Life Architecture OS</h1>
+      <p>Log input → output. See patterns, oscillation, and next actions. Data stays in your browser.</p>
+    </header>
 
-    <div class="container">
-        <header>
-            <h1>Life Architecture OS</h1>
-            <p>V1.0 • Systemic Input-Output Processor</p>
-        </header>
+    <section class="inputs" aria-label="Log entry">
+      <div>
+        <label for="what-happened">What happened</label>
+        <textarea id="what-happened" placeholder="External event, trigger, or situation…"></textarea>
+      </div>
+      <div>
+        <label for="what-you-did">What you did</label>
+        <textarea id="what-you-did" placeholder="Your response, behavior, or choice…"></textarea>
+      </div>
+      <div class="row">
+        <button type="button" id="btn-log">Log &amp; analyze</button>
+        <button type="button" class="secondary" id="btn-clear">Clear history</button>
+      </div>
+    </section>
 
-        <!-- INPUT SYSTEM -->
-        <section class="input-section">
-            <div class="field-group">
-                <label for="input-field">1. What Happened? (Input)</label>
-                <textarea id="input-field" placeholder="e.g. Received a critical email from my manager..."></textarea>
-            </div>
-            <div class="field-group">
-                <label for="output-field">2. What did you do? (Output)</label>
-                <textarea id="output-field" placeholder="e.g. Apologized immediately and worked until 10pm..."></textarea>
-            </div>
-            <button onclick="handleSubmission()">Process Interaction</button>
-        </section>
+    <section id="panel" aria-live="polite">
+      <div class="flags" id="flags"></div>
+      <div class="block">
+        <h3>Observation</h3>
+        <p id="out-observation"></p>
+      </div>
+      <div class="block">
+        <h3>Pattern</h3>
+        <p id="out-pattern"></p>
+      </div>
+      <div class="block">
+        <h3>Interpretation</h3>
+        <p id="out-interpretation"></p>
+      </div>
+      <div class="block action">
+        <h3>Action</h3>
+        <p id="out-action"></p>
+      </div>
+    </section>
 
-        <!-- SYSTEM OUTPUT PANEL -->
-        <section id="response-panel">
-            <div class="response-block">
-                <div class="response-label">Observation</div>
-                <div id="res-observation" class="response-content"></div>
-            </div>
-            <div class="response-block">
-                <div class="response-label">Detected Pattern</div>
-                <div id="res-pattern" class="response-content"></div>
-            </div>
-            <div class="response-block">
-                <div class="response-label">System Interpretation</div>
-                <div id="res-interpretation" class="response-content"></div>
-            </div>
-            <div class="response-block">
-                <div class="response-label">Recommended Action</div>
-                <div id="res-action" class="response-content response-action"></div>
-            </div>
-            <div id="res-question-wrapper" class="response-block" style="display:none;">
-                <div class="response-label">Follow-up Question</div>
-                <div id="res-question" class="response-content" style="font-style: italic;"></div>
-            </div>
-        </section>
+    <section class="history">
+      <h2>History</h2>
+      <div id="history-root"></div>
+    </section>
 
-        <!-- HISTORY VIEW -->
-        <section class="history-section">
-            <h2>Interaction Logs</h2>
-            <div id="history-container">
-                <!-- Entries will be injected here -->
-            </div>
-        </section>
+    <footer>Stored locally · Life Architecture OS</footer>
+  </div>
 
-        <footer>
-            THE HUMAN LAB © 2024 • DATA STORED LOCALLY
-        </footer>
-    </div>
+  <script>
+(function () {
+  const STORAGE_KEY = 'lifeArchitectureOS_v1';
+  const LEGACY_KEY = 'la_os_data';
 
-    <script>
-        /**
-         * LIFE ARCHITECTURE OS - CORE LOGIC
-         */
+  const STOP = new Set([
+    'the','a','an','and','or','but','in','on','at','to','for','of','with','by','from','as','is','was','are','were','been','be','have','has','had','do','does','did','will','would','could','should','may','might','must','can','this','that','these','those','i','you','he','she','it','we','they','my','your','their','what','which','who','when','where','why','how','not','no','so','if','then','just','like','about','into','through','over','after','before','again','there','here','some','any','very','more','much','too','also','only','even'
+  ]);
 
-        // --- DATA LAYER ---
-        let state = {
-            entries: []
-        };
+  /** @type {{ id: string, at: string, happened: string, did: string, analysis?: object }[]} */
+  let entries = [];
 
-        const loadData = () => {
-            const saved = localStorage.getItem('la_os_data');
-            if (saved) {
-                state.entries = JSON.parse(saved);
-                renderHistory();
-            }
-        };
+  function normalizePhrase(s) {
+    return String(s || '').toLowerCase().trim().replace(/\s+/g, ' ');
+  }
 
-        const saveData = () => {
-            localStorage.setItem('la_os_data', JSON.stringify(state.entries));
-        };
+  function stripKey(s) {
+    return normalizePhrase(s).replace(/[^a-z0-9\s]/g, '');
+  }
 
-        // --- LOGIC LAYER (The "Brain") ---
+  function tokens(s) {
+    return stripKey(s)
+      .split(/\s+/)
+      .filter(function (w) { return w.length > 2 && !STOP.has(w); });
+  }
 
-        // Normalizes text for better pattern matching
-        const normalize = (text) => text.toLowerCase().trim().replace(/[^\w\s]/gi, '');
+  function unique(arr) {
+    return Array.from(new Set(arr));
+  }
 
-        const detectPatterns = (currentInput) => {
-            const normalizedInput = normalize(currentInput);
-            const matches = state.entries.filter(e => normalize(e.input) === normalizedInput);
-            
-            const outputs = matches.map(m => normalize(m.output));
-            const uniqueOutputs = [...new Set(outputs)];
-            
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        entries = JSON.parse(raw);
+        if (!Array.isArray(entries)) entries = [];
+        return;
+      }
+      var old = localStorage.getItem(LEGACY_KEY);
+      if (old) {
+        var parsed = JSON.parse(old);
+        if (Array.isArray(parsed)) {
+          entries = parsed.map(function (e) {
             return {
-                count: matches.length,
-                uniqueOutputs: uniqueOutputs,
-                isOscillating: uniqueOutputs.length > 1,
-                lastOutput: matches.length > 0 ? matches[matches.length - 1].output : null
+              id: String(e.id || Date.now() + Math.random()),
+              at: e.timestamp || new Date().toISOString(),
+              happened: e.input || '',
+              did: e.output || ''
             };
-        };
+          });
+          save();
+        }
+      }
+    } catch (e) {
+      entries = [];
+    }
+  }
 
-        const generateResponse = (entry) => {
-            const analysis = detectPatterns(entry.input);
-            
-            // This structure is future-proofed for OpenAI API replacement
-            let response = {
-                observation: `You recorded an external input: "${entry.input}". Your selected response was: "${entry.output}".`,
-                pattern: "New data point. Insufficient history for pattern detection.",
-                interpretation: "Initial architecture entry.",
-                action: "Observe if this input recurs within the next 72 hours.",
-                question: "What was the physiological feeling right before you responded?"
-            };
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  }
 
-            if (analysis.count > 0) {
-                const totalOccurrences = analysis.count + 1;
-                response.pattern = `This input has occurred ${totalOccurrences} times.`;
+  function analyze(happened, did) {
+    var key = stripKey(happened);
+    var prior = entries.filter(function (e) { return stripKey(e.happened) === key; });
+    var outNorm = stripKey(did);
+    var priorOuts = prior.map(function (e) { return stripKey(e.did); });
+    var allOuts = priorOuts.concat([outNorm]);
+    var distinctOut = unique(allOuts).length;
+    var sameCount = prior.length + 1;
+    var oscillating = distinctOut > 1 && prior.length >= 1;
 
-                if (analysis.isOscillating) {
-                    response.interpretation = "OSCILLATION DETECTED: You are responding differently to the same structural input. This indicates system instability.";
-                    response.action = "Identify which of your previous responses led to a better long-term outcome and standardize it.";
-                } else {
-                    response.interpretation = "STABLE PATTERN: Your system has a consistent output for this input.";
-                    response.action = "Evaluate if this consistent output serves your long-term architecture or if it's a legacy habit.";
-                }
-            }
+    var toks = tokens(happened);
+    var related = [];
+    if (toks.length) {
+      var set = new Set(toks);
+      entries.forEach(function (e) {
+        var overlap = tokens(e.happened).filter(function (t) { return set.has(t); });
+        if (overlap.length >= 2) related.push({ entry: e, overlap: overlap.length });
+      });
+    }
+    related.sort(function (a, b) { return b.overlap - a.overlap; });
 
-            return response;
-        };
+    var patternParts = [];
+    if (sameCount === 1) {
+      patternParts.push('First log for this exact situation (normalized text match).');
+    } else {
+      patternParts.push('This situation (same normalized “what happened”) has been logged ' + sameCount + ' times.');
+      if (!oscillating) {
+        patternParts.push('Your response has been consistent so far.');
+      }
+    }
+    if (related.length) {
+      patternParts.push('Theme overlap: ' + related.length + ' earlier entr' + (related.length === 1 ? 'y' : 'ies') + ' share multiple keywords with this one.');
+    }
 
-        // --- UI LAYER ---
+    var observation = 'You recorded: “' + happened.trim() + '” → you did: “' + did.trim() + '”.';
+    var pattern = patternParts.join(' ');
+    var interpretation;
+    var action;
 
-        const handleSubmission = () => {
-            const inputEl = document.getElementById('input-field');
-            const outputEl = document.getElementById('output-field');
+    if (oscillating) {
+      interpretation = 'Oscillation: the same class of situation has produced more than one kind of response. That often means competing rules, mood swings, or unclear priorities.';
+      action = 'Pick one response you trust most for this situation, write it in one sentence, and use it as the default for the next three occurrences—then revisit.';
+    } else if (sameCount >= 3) {
+      interpretation = 'Stable loop: this trigger keeps showing up and you answer it in a repeatable way. That can be efficient—or automatic without review.';
+      action = 'Once a week, ask: does this default response still match who you want to be? If not, change one variable (timing, tone, or boundary) on purpose.';
+    } else if (related.length >= 3) {
+      interpretation = 'Broader pattern: many logs echo the same themes even when the wording differs. The system may be stressing the same dimension of life.';
+      action = 'Name the shared theme in five words, then choose one small structural change (calendar, boundary, or conversation) aimed at that theme.';
+    } else if (sameCount === 2 && !oscillating) {
+      interpretation = 'Early repeat: two data points with the same response—enough to notice, not enough to treat as permanent identity.';
+      action = 'If this situation appears again, pause for ten seconds before acting; note whether the pause changes anything.';
+    } else {
+      interpretation = 'Single or sparse data. The architecture is still forming—favor curiosity over conclusions.';
+      action = 'When a similar situation returns, log it again; the OS gets sharper with volume.';
+    }
 
-            if (!inputEl.value || !outputEl.value) {
-                alert("Both fields are required for analysis.");
-                return;
-            }
+    return {
+      observation: observation,
+      pattern: pattern,
+      interpretation: interpretation,
+      action: action,
+      flags: {
+        repeat: sameCount >= 2,
+        oscillation: oscillating,
+        theme: related.length >= 2
+      }
+    };
+  }
 
-            const newEntry = {
-                id: Date.now(),
-                timestamp: new Date().toISOString(),
-                input: inputEl.value,
-                output: outputEl.value
-            };
+  function renderFlags(a) {
+    var el = document.getElementById('flags');
+    el.innerHTML = '';
+    if (a.flags.oscillation) {
+      var s = document.createElement('span');
+      s.className = 'flag osc';
+      s.textContent = 'Oscillation';
+      el.appendChild(s);
+    }
+    if (a.flags.repeat) {
+      var p = document.createElement('span');
+      p.className = 'flag pattern';
+      p.textContent = a.flags.oscillation ? 'Same situation · multiple responses' : 'Repeat situation';
+      el.appendChild(p);
+    }
+    if (a.flags.theme && !a.flags.oscillation) {
+      var t = document.createElement('span');
+      t.className = 'flag pattern';
+      t.textContent = 'Keyword pattern';
+      el.appendChild(t);
+    }
+    if (!el.children.length) el.style.display = 'none';
+    else el.style.display = 'flex';
+  }
 
-            // Generate structured response before saving to history
-            const response = generateResponse(newEntry);
+  function showAnalysis(a) {
+    var panel = document.getElementById('panel');
+    panel.classList.add('visible');
+    renderFlags(a);
+    document.getElementById('out-observation').textContent = a.observation;
+    document.getElementById('out-pattern').textContent = a.pattern;
+    document.getElementById('out-interpretation').textContent = a.interpretation;
+    document.getElementById('out-action').textContent = a.action;
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 
-            // Save
-            state.entries.push(newEntry);
-            saveData();
+  function renderHistory() {
+    var root = document.getElementById('history-root');
+    root.innerHTML = '';
+    if (!entries.length) {
+      var empty = document.createElement('p');
+      empty.className = 'empty';
+      empty.textContent = 'No entries yet.';
+      root.appendChild(empty);
+      return;
+    }
+    var copy = entries.slice().reverse();
+    copy.forEach(function (e) {
+      var key = stripKey(e.happened);
+      var same = entries.filter(function (x) { return stripKey(x.happened) === key; });
+      var outs = same.map(function (x) { return stripKey(x.did); });
+      var osc = unique(outs).length > 1;
 
-            // Display Response
-            displayResponse(response);
+      var card = document.createElement('article');
+      card.className = 'card';
+      var meta = document.createElement('div');
+      meta.className = 'card-meta';
+      meta.innerHTML = '<span>' + new Date(e.at).toLocaleString() + '</span><span>#' + e.id.slice(-6) + '</span>';
+      card.appendChild(meta);
 
-            // Reset Form & Refresh History
-            inputEl.value = '';
-            outputEl.value = '';
-            renderHistory();
-        };
+      var pair = document.createElement('div');
+      pair.className = 'pair';
+      pair.innerHTML =
+        '<div><strong>What happened</strong>' + escapeHtml(e.happened) + '</div>' +
+        '<div><strong>What you did</strong>' + escapeHtml(e.did) + '</div>';
+      card.appendChild(pair);
 
-        const displayResponse = (res) => {
-            const panel = document.getElementById('response-panel');
-            panel.style.display = 'block';
+      if (same.length > 1 || osc) {
+        var f = document.createElement('div');
+        f.className = 'flags';
+        if (same.length > 1) {
+          var fp = document.createElement('span');
+          fp.className = 'flag pattern';
+          fp.textContent = '×' + same.length + ' same situation';
+          f.appendChild(fp);
+        }
+        if (osc) {
+          var fo = document.createElement('span');
+          fo.className = 'flag osc';
+          fo.textContent = 'Oscillation';
+          f.appendChild(fo);
+        }
+        card.appendChild(f);
+      }
 
-            document.getElementById('res-observation').innerText = res.observation;
-            document.getElementById('res-pattern').innerText = res.pattern;
-            document.getElementById('res-interpretation').innerText = res.interpretation;
-            document.getElementById('res-action').innerText = res.action;
-            
-            if (res.question) {
-                document.getElementById('res-question-wrapper').style.display = 'block';
-                document.getElementById('res-question').innerText = res.question;
-            }
+      root.appendChild(card);
+    });
+  }
 
-            panel.scrollIntoView({ behavior: 'smooth' });
-        };
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML.replace(/\n/g, '<br>');
+  }
 
-        const renderHistory = () => {
-            const container = document.getElementById('history-container');
-            container.innerHTML = '';
+  document.getElementById('btn-log').addEventListener('click', function () {
+    var h = document.getElementById('what-happened').value;
+    var d = document.getElementById('what-you-did').value;
+    if (!normalizePhrase(h) || !normalizePhrase(d)) {
+      alert('Please fill in both fields.');
+      return;
+    }
+    var a = analyze(h, d);
+    var entry = {
+      id: String(Date.now()) + '-' + Math.random().toString(36).slice(2, 7),
+      at: new Date().toISOString(),
+      happened: h.trim(),
+      did: d.trim(),
+      analysis: a
+    };
+    entries.push(entry);
+    save();
+    showAnalysis(a);
+    document.getElementById('what-happened').value = '';
+    document.getElementById('what-you-did').value = '';
+    renderHistory();
+  });
 
-            // Render in reverse chronological order
-            [...state.entries].reverse().forEach(entry => {
-                // Check patterns for labels
-                const matches = state.entries.filter(e => normalize(e.input) === normalize(entry.input));
-                const uniqueOutputs = [...new Set(matches.map(m => normalize(m.output)))];
-                
-                const card = document.createElement('div');
-                card.className = 'entry-card';
-                
-                let tags = '';
-                if (matches.length > 1) {
-                    tags += `<span class="tag tag-pattern">PATTERN: ${matches.length}x</span> `;
-                }
-                if (uniqueOutputs.length > 1) {
-                    tags += `<span class="tag tag-oscillation">OSCILLATION</span>`;
-                }
+  document.getElementById('btn-clear').addEventListener('click', function () {
+    if (!entries.length) return;
+    if (!confirm('Delete all saved entries?')) return;
+    entries = [];
+    save();
+    document.getElementById('panel').classList.remove('visible');
+    renderHistory();
+  });
 
-                card.innerHTML = `
-                    <div class="entry-header">
-                        <span>${new Date(entry.timestamp).toLocaleString()}</span>
-                        <span>ID: ${entry.id.toString().slice(-4)}</span>
-                    </div>
-                    <div class="entry-grid">
-                        <div>
-                            <div class="response-label">Input</div>
-                            <div>${entry.input}</div>
-                        </div>
-                        <div>
-                            <div class="response-label">Output</div>
-                            <div>${entry.output}</div>
-                        </div>
-                    </div>
-                    <div>${tags}</div>
-                `;
-                container.appendChild(card);
-            });
-        };
-
-        // Initialize App
-        window.onload = loadData;
-
-    </script>
+  load();
+  renderHistory();
+})();
+  </script>
 </body>
 </html>
