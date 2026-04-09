@@ -1,398 +1,429 @@
 <!DOCTYPE html>
-<html lang="en" x-data="lifeArchOS()">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Life Architecture OS | Structural Intelligence & Behaviour Analysis Tool</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Use the Life Architecture OS to understand yourself better. A self-diagnostic tool built on structural intelligence, systems thinking, and behaviour analysis.">
-    <meta name="keywords" content="self diagnostic tool, behaviour analysis, systems thinking tool, structural intelligence, cognitive assessment, personal clarity tool">
-
-    <!-- Frameworks & Fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono&display=swap" rel="stylesheet">
-
+    <title>LIFE ARCHITECTURE OS | V1</title>
     <style>
-        [x-cloak] { display: none !important; }
-        body { font-family: 'DM Sans', sans-serif; background-color: #f8f7f4; color: #1a1916; }
-        .mono { font-family: 'DM Mono', monospace; }
-        .si-card { border: 1px solid rgba(0,0,0,0.06); background: white; border-radius: 1.25rem; transition: all 0.2s ease; }
-        .si-card:hover { border-color: rgba(0,0,0,0.12); shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
-        .si-gradient { background: linear-gradient(135deg, #1a1916 0%, #44423b 100%); }
-        .tension-line { background-image: radial-gradient(#d1d5db 1px, transparent 1px); background-size: 20px 20px; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+        /* 
+           DESIGN SYSTEM: Minimalist, Neutral, Functional 
+           The UI is built to feel like a high-end tool, not a toy.
+        */
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --text-muted: #666666;
+            --border: #e5e5e5;
+            --accent: #000000;
+            --system-bg: #f9f9f9;
+            --oscillation-color: #ff4d4d;
+            --pattern-color: #0070f3;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 650px;
+            width: 100%;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Input Section */
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: var(--font-main);
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Response Panel */
+        #response-panel {
+            background: var(--system-bg);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            display: none; /* Hidden until first submission */
+        }
+
+        .response-block {
+            margin-bottom: 1.5rem;
+        }
+
+        .response-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .response-content {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .response-action {
+            font-weight: 700;
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        /* History Section */
+        .history-section h2 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .entry-card {
+            border: 1px solid var(--border);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .entry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .tag-oscillation { background: #ffebeb; color: #d0021b; }
+        .tag-pattern { background: #ebf5ff; color: #0070f3; }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .entry-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
-<body class="antialiased overflow-hidden">
+<body>
 
-    <!-- TOP NAVIGATION -->
-    <nav class="h-16 bg-white border-b border-gray-100 px-8 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-4">
-            <div class="w-9 h-9 bg-black rounded-xl flex items-center justify-center overflow-hidden relative">
-                <div class="absolute inset-0 border-[1px] border-white/20 rotate-45 scale-150"></div>
-                <div class="w-2 h-2 bg-white rounded-full z-10"></div>
+    <div class="container">
+        <header>
+            <h1>Life Architecture OS</h1>
+            <p>V1.0 • Systemic Input-Output Processor</p>
+        </header>
+
+        <!-- INPUT SYSTEM -->
+        <section class="input-section">
+            <div class="field-group">
+                <label for="input-field">1. What Happened? (Input)</label>
+                <textarea id="input-field" placeholder="e.g. Received a critical email from my manager..."></textarea>
             </div>
-            <div>
-                <h1 class="text-sm font-bold tracking-tight">Life Architecture OS</h1>
-                <p class="text-[10px] uppercase tracking-widest text-gray-400 mono">Structural Intelligence v3.0</p>
+            <div class="field-group">
+                <label for="output-field">2. What did you do? (Output)</label>
+                <textarea id="output-field" placeholder="e.g. Apologized immediately and worked until 10pm..."></textarea>
             </div>
-        </div>
-        
-        <div class="hidden md:flex items-center gap-6 text-[11px] mono text-gray-400 uppercase tracking-widest">
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                <span>Structural Integrity: Optimal</span>
+            <button onclick="handleSubmission()">Process Interaction</button>
+        </section>
+
+        <!-- SYSTEM OUTPUT PANEL -->
+        <section id="response-panel">
+            <div class="response-block">
+                <div class="response-label">Observation</div>
+                <div id="res-observation" class="response-content"></div>
             </div>
-            <div class="h-4 w-[1px] bg-gray-200"></div>
-            <span x-text="new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })"></span>
-        </div>
-    </nav>
-
-    <div class="flex h-[calc(100vh-64px)]">
-        
-        <!-- SIDEBAR -->
-        <aside class="w-72 bg-white border-r border-gray-100 p-6 flex flex-col gap-1 overflow-y-auto shrink-0">
-            <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-4 px-3">Structural Core</p>
-            
-            <nav class="space-y-1">
-                <template x-for="item in navItems" :key="item.id">
-                    <button @click="view = item.id" 
-                            :class="view === item.id ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-50'"
-                            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all w-full text-left text-sm font-medium">
-                        <span class="text-lg" x-text="item.icon"></span>
-                        <span x-text="item.label"></span>
-                        <span x-show="item.badge" class="ml-auto text-[9px] mono bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded" x-text="item.badge"></span>
-                    </button>
-                </template>
-            </nav>
-
-            <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest mt-10 mb-4 px-3">Engineering Logs</p>
-            <button @click="view = 'behavior'" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 transition-all text-sm font-medium">
-                <span class="text-lg">◌</span> Behavioural Patterns
-            </button>
-            <button @click="view = 'decisions'" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 transition-all text-sm font-medium">
-                <span class="text-lg">◧</span> Resolution Logic
-            </button>
-
-            <div class="mt-auto p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">System Load</p>
-                <div class="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
-                    <div class="bg-blue-600 h-full transition-all duration-1000" :style="'width: ' + structuralLoad + '%'"></div>
-                </div>
-                <p class="text-[10px] text-gray-500 mt-2 mono" x-text="structuralLoad + '% capacity used'"></p>
+            <div class="response-block">
+                <div class="response-label">Detected Pattern</div>
+                <div id="res-pattern" class="response-content"></div>
             </div>
-        </aside>
-
-        <!-- MAIN VIEWPORT -->
-        <main class="flex-1 overflow-y-auto p-8 lg:p-12">
-            <div class="max-w-6xl mx-auto">
-
-                <!-- 1. DASHBOARD MODULE -->
-                <div x-show="view === 'dashboard'" x-cloak x-transition>
-                    <header class="mb-10 flex justify-between items-end">
-                        <div>
-                            <h2 class="text-3xl font-bold tracking-tight">System Overview</h2>
-                            <p class="text-gray-500 mt-2">Analysis of Current Reality vs. Structural Vision.</p>
-                        </div>
-                        <div class="text-right">
-                            <button class="px-5 py-2.5 bg-black text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-gray-800 transition-colors">
-                                + Log Structural Shift
-                            </button>
-                        </div>
-                    </header>
-
-                    <!-- SIQ BIG BANNER -->
-                    <div class="si-gradient rounded-[2rem] p-10 text-white flex flex-col md:flex-row justify-between items-center relative overflow-hidden mb-8 shadow-2xl shadow-gray-200">
-                        <div class="relative z-10 mb-6 md:mb-0">
-                            <p class="mono text-[10px] opacity-50 tracking-widest uppercase">Structural Intelligence Quotient (SIQ)</p>
-                            <div class="flex items-baseline gap-4 mt-2">
-                                <h3 class="text-8xl font-light tracking-tighter" x-text="siq">82.4</h3>
-                                <span class="text-green-400 text-sm mono font-bold">↑ 2.4</span>
-                            </div>
-                            <p class="text-sm opacity-60 mt-4 max-w-xs">Your ability to perceive and resolve life-tension is in the top 5% of users.</p>
-                        </div>
-                        
-                        <div class="relative z-10 grid grid-cols-2 gap-4 w-full md:w-auto">
-                            <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10">
-                                <p class="text-[10px] mono opacity-50 uppercase tracking-widest">Oscillation Risk</p>
-                                <p class="text-2xl font-bold text-amber-400">Low</p>
-                            </div>
-                            <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10">
-                                <p class="text-[10px] mono opacity-50 uppercase tracking-widest">Alignment</p>
-                                <p class="text-2xl font-bold text-blue-400">88%</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Decorative background element -->
-                        <div class="absolute -right-20 -bottom-20 w-80 h-80 border-[1px] border-white/5 rounded-full"></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- TENSION MAP -->
-                        <section class="si-card p-8 flex flex-col">
-                            <div class="flex justify-between items-center mb-8">
-                                <h4 class="text-[11px] mono uppercase text-gray-400 tracking-widest font-bold">Structural Tension Map</h4>
-                                <span class="text-[10px] bg-green-50 text-green-600 px-2 py-1 rounded-md font-bold uppercase">Resolving</span>
-                            </div>
-                            
-                            <div class="flex-1 space-y-6 relative">
-                                <div class="p-5 bg-gray-50 rounded-2xl border border-gray-100 relative z-10">
-                                    <p class="text-[10px] mono text-gray-400 uppercase font-bold mb-2">Current Reality</p>
-                                    <p class="text-sm font-medium leading-relaxed">Reactive daily workflow dominated by external notifications and low-priority social demands.</p>
-                                </div>
-                                
-                                <div class="flex justify-center py-2">
-                                    <div class="flex flex-col items-center gap-1 opacity-20">
-                                        <div class="w-1 h-1 bg-black rounded-full"></div>
-                                        <div class="w-1 h-1 bg-black rounded-full"></div>
-                                        <div class="w-1 h-1 bg-black rounded-full"></div>
-                                    </div>
-                                </div>
-
-                                <div class="p-5 bg-black text-white rounded-2xl relative z-10 shadow-xl">
-                                    <p class="text-[10px] mono text-gray-500 uppercase font-bold mb-2">Desired Resolution</p>
-                                    <p class="text-sm font-medium leading-relaxed">Generative structure: High-output deep work blocks, automated boundaries, and autonomous financial growth.</p>
-                                </div>
-                                
-                                <!-- Tension vector background -->
-                                <div class="absolute inset-0 tension-line opacity-40 -z-0 rounded-xl"></div>
-                            </div>
-                        </section>
-
-                        <!-- OSCILLATION DETECTOR -->
-                        <section class="si-card p-8 bg-white overflow-hidden relative">
-                            <h4 class="text-[11px] mono uppercase text-gray-400 mb-8 tracking-widest font-bold">Oscillation Detector</h4>
-                            
-                            <div class="space-y-4">
-                                <template x-for="loop in oscillationLoops" :key="loop.title">
-                                    <div class="flex gap-4 p-5 rounded-2xl border border-gray-50" :class="loop.risk === 'High' ? 'bg-red-50/50 border-red-100' : 'bg-gray-50'">
-                                        <div class="text-2xl" x-text="loop.icon"></div>
-                                        <div>
-                                            <p class="text-xs font-bold" :class="loop.risk === 'High' ? 'text-red-700' : 'text-gray-800'" x-text="loop.title"></p>
-                                            <p class="text-[11px] text-gray-500 mt-1 leading-relaxed" x-text="loop.desc"></p>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-
-                            <div class="mt-8 p-6 bg-gray-900 rounded-2xl text-white">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-[10px] mono text-gray-500 uppercase">Recommendation</span>
-                                    <span class="text-xs text-blue-400 font-bold">Action Required</span>
-                                </div>
-                                <p class="text-xs mt-3 leading-relaxed">"Stop trying to fix your mindset. Your environment is designed to reward crisis. Delete 2 social apps and block your calendar before 11am to break the loop."</p>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-
-                <!-- 2. GEODESIC IDENTITY MODULE -->
-                <div x-show="view === 'identity'" x-cloak x-transition>
-                    <header class="mb-10">
-                        <h2 class="text-3xl font-bold tracking-tight">Geodesic Identity</h2>
-                        <p class="text-gray-500 mt-2">Mapping why you behave differently in different situations.</p>
-                    </header>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <template x-for="node in identityNodes" :key="node.name">
-                            <div class="si-card p-8 relative flex flex-col h-full">
-                                <div :class="node.status === 'Active' ? 'bg-green-500 shadow-green-200' : 'bg-gray-200'" class="w-3 h-3 rounded-full absolute top-8 right-8 shadow-lg"></div>
-                                <p class="text-[10px] mono text-gray-400 uppercase font-bold mb-1" x-text="'Node: ' + node.type"></p>
-                                <h4 class="text-xl font-bold mb-4" x-text="node.name"></h4>
-                                <p class="text-sm text-gray-500 leading-relaxed mb-8 flex-1" x-text="node.desc"></p>
-                                
-                                <div class="space-y-4">
-                                    <div>
-                                        <p class="text-[9px] uppercase tracking-widest font-bold text-gray-400 mb-2">Triggers</p>
-                                        <div class="flex flex-wrap gap-2">
-                                            <template x-for="trigger in node.triggers">
-                                                <span class="text-[10px] px-2 py-1 bg-gray-100 rounded-md text-gray-600 font-medium" x-text="trigger"></span>
-                                            </template>
-                                        </div>
-                                    </div>
-                                    <div class="pt-4 border-t border-gray-50">
-                                        <p class="text-[10px] mono text-gray-400" x-text="'Structural Load: ' + node.load + '%'"></p>
-                                        <div class="w-full bg-gray-100 h-1 mt-2 rounded-full overflow-hidden">
-                                            <div class="bg-black h-full" :style="'width: ' + node.load + '%'"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-
-                    <div class="mt-8 si-card p-10 bg-blue-50/30 border-blue-100">
-                        <div class="flex flex-col md:flex-row gap-10 items-center">
-                            <div class="shrink-0 w-24 h-24 bg-white rounded-3xl flex items-center justify-center text-3xl shadow-sm border border-blue-100">💡</div>
-                            <div>
-                                <h5 class="text-lg font-bold text-blue-900 mb-2">The Structural Insight</h5>
-                                <p class="text-sm text-blue-800/70 leading-relaxed">
-                                    You are not "inconsistent." Your identity is a <strong>geodesic structure</strong> where different environments activate different nodes. You behave differently because the external structure changed, not because your character did. To change yourself, redesign the environment that triggers your dormant nodes.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. SIQ LAB MODULE -->
-                <div x-show="view === 'siq'" x-cloak x-transition>
-                    <header class="mb-10">
-                        <h2 class="text-3xl font-bold tracking-tight">SIQ Cognitive Assessment</h2>
-                        <p class="text-gray-500 mt-2">Personal development assessment via structural discernment.</p>
-                    </header>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                        <template x-for="stat in siqMetrics" :key="stat.label">
-                            <div class="si-card p-8">
-                                <p class="text-[10px] mono text-gray-400 uppercase font-bold tracking-widest mb-6" x-text="stat.label"></p>
-                                <div class="flex items-end gap-2">
-                                    <span class="text-5xl font-light tracking-tighter" x-text="stat.value"></span>
-                                    <span class="text-xs text-gray-400 mb-2">/ 100</span>
-                                </div>
-                                <p class="text-[11px] text-gray-500 mt-4 leading-relaxed" x-text="stat.desc"></p>
-                            </div>
-                        </template>
-                    </div>
-
-                    <div class="si-card p-10">
-                        <h4 class="text-xl font-bold mb-8">Structural Intelligence Benchmarks</h4>
-                        <div class="space-y-10">
-                            <template x-for="benchmark in benchmarks" :key="benchmark.title">
-                                <div>
-                                    <div class="flex justify-between items-center mb-4">
-                                        <h5 class="text-sm font-bold text-gray-800" x-text="benchmark.title"></h5>
-                                        <span class="text-xs mono font-bold text-gray-400" x-text="benchmark.score + '%'"></span>
-                                    </div>
-                                    <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-                                        <div class="bg-black h-full transition-all duration-1000" :style="'width: ' + benchmark.score + '%'"></div>
-                                    </div>
-                                    <p class="text-xs text-gray-400 mt-3 italic" x-text="benchmark.insight"></p>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 4. BEHAVIOR LOGS MODULE -->
-                <div x-show="view === 'behavior'" x-cloak x-transition>
-                    <header class="mb-10">
-                        <h2 class="text-3xl font-bold tracking-tight">Behavioural Pattern Analysis</h2>
-                        <p class="text-gray-500 mt-2">Analysing the own behaviour through input/output tracking.</p>
-                    </header>
-
-                    <div class="grid grid-cols-1 gap-4 mb-10">
-                        <div class="si-card p-8 bg-gray-50 border-dashed border-2">
-                            <p class="text-xs text-center text-gray-400 font-medium">New Pattern Log: Drop inputs here to detect correlation.</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <template x-for="entry in behaviorLogs" :key="entry.id">
-                            <div class="si-card p-6 flex flex-col md:flex-row gap-6 items-center">
-                                <div class="w-full md:w-1/3">
-                                    <p class="text-[10px] mono text-gray-400 uppercase font-bold mb-1">Structural Input</p>
-                                    <p class="text-sm font-bold text-gray-800" x-text="entry.input"></p>
-                                </div>
-                                <div class="hidden md:block text-gray-200">→</div>
-                                <div class="w-full md:w-1/3">
-                                    <p class="text-[10px] mono text-gray-400 uppercase font-bold mb-1">Behavioural Output</p>
-                                    <p class="text-sm font-bold text-gray-800" x-text="entry.output"></p>
-                                </div>
-                                <div class="ml-auto flex items-center gap-6">
-                                    <div class="text-right">
-                                        <p class="text-[10px] mono text-gray-400 uppercase font-bold mb-1">Correlation</p>
-                                        <p class="text-sm font-bold text-green-600" x-text="entry.correlation + '%'"></p>
-                                    </div>
-                                    <button class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400">⋮</button>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-
-                <!-- 5. DECISIONS MODULE -->
-                <div x-show="view === 'decisions'" x-cloak x-transition>
-                    <header class="mb-10">
-                        <h2 class="text-3xl font-bold tracking-tight">Resolution Logic</h2>
-                        <p class="text-gray-500 mt-2">Auditing the structural integrity of your decision-making.</p>
-                    </header>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <template x-for="decision in decisions" :key="decision.title">
-                            <div class="si-card p-8">
-                                <div class="flex justify-between mb-6">
-                                    <span class="text-[10px] mono font-bold px-2 py-1 bg-gray-100 rounded text-gray-500 uppercase" x-text="decision.category"></span>
-                                    <span class="text-[10px] mono text-gray-400" x-text="decision.date"></span>
-                                </div>
-                                <h4 class="text-lg font-bold mb-3" x-text="decision.title"></h4>
-                                <p class="text-sm text-gray-500 leading-relaxed mb-6" x-text="decision.logic"></p>
-                                
-                                <div class="p-4 rounded-xl" :class="decision.result === 'Optimized' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="text-xs font-bold uppercase tracking-widest">Post-Audit:</span>
-                                        <span class="text-xs font-bold" x-text="decision.result"></span>
-                                    </div>
-                                    <p class="text-[11px] leading-relaxed opacity-80" x-text="decision.audit"></p>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-
+            <div class="response-block">
+                <div class="response-label">System Interpretation</div>
+                <div id="res-interpretation" class="response-content"></div>
             </div>
-        </main>
+            <div class="response-block">
+                <div class="response-label">Recommended Action</div>
+                <div id="res-action" class="response-content response-action"></div>
+            </div>
+            <div id="res-question-wrapper" class="response-block" style="display:none;">
+                <div class="response-label">Follow-up Question</div>
+                <div id="res-question" class="response-content" style="font-style: italic;"></div>
+            </div>
+        </section>
+
+        <!-- HISTORY VIEW -->
+        <section class="history-section">
+            <h2>Interaction Logs</h2>
+            <div id="history-container">
+                <!-- Entries will be injected here -->
+            </div>
+        </section>
+
+        <footer>
+            THE HUMAN LAB © 2024 • DATA STORED LOCALLY
+        </footer>
     </div>
 
-    <!-- APP LOGIC -->
     <script>
-        function lifeArchOS() {
-            return {
-                view: 'dashboard',
-                siq: 82.4,
-                structuralLoad: 76,
-                navItems: [
-                    { id: 'dashboard', label: 'System Overview', icon: '◉', badge: null },
-                    { id: 'identity', label: 'Geodesic Identity', icon: '◈', badge: '3 Nodes' },
-                    { id: 'siq', label: 'SIQ Lab', icon: '⌬', badge: 'High' }
-                ],
-                oscillationLoops: [
-                    { title: 'The Crisis-Action Loop', icon: '🔄', risk: 'High', desc: 'Advancement only occurs during high environmental stress. Behavior returns to baseline once stress is resolved.' },
-                    { title: 'The Social-Drain Loop', icon: '🔋', risk: 'Low', desc: 'Excessive external validation seeking leading to structural collapse of personal projects.' },
-                    { title: 'The Sunk-Cost Anchor', icon: '⚓', risk: 'Low', desc: 'Holding onto broken structures because of historical time investment.' }
-                ],
-                identityNodes: [
-                    { type: 'Architect', name: 'The Architect', status: 'Active', load: 45, desc: 'Systems-driven, objective, and solitary. Focused on long-term resolution.', triggers: ['Quiet', 'Complex Data', 'No Deadlines'] },
-                    { type: 'Reactive', name: 'The Pleaser', status: 'Dormant', load: 12, desc: 'External-validation seeking. Behavior changes to match the group structure.', triggers: ['Group Conflict', 'Criticism', 'Noise'] },
-                    { type: 'Kinetic', name: 'The Performer', status: 'Active', load: 88, desc: 'High energy, visible progress, competitive. Thrives in crisis structures.', triggers: ['Deadlines', 'Audience', 'Speed'] }
-                ],
-                siqMetrics: [
-                    { label: 'Objectivity', value: 88, desc: 'Ability to see current reality without emotional bias.' },
-                    { label: 'Discernment', value: 72, desc: 'Ability to spot invisible structural forces in environment.' },
-                    { label: 'Resolution', value: 64, desc: 'Capacity to build new structures that permanently fix behavior.' }
-                ],
-                benchmarks: [
-                    { title: 'Systems Thinking Capacity', score: 82, insight: 'You are consistently viewing problems as structural rather than personal.' },
-                    { title: 'Cognitive Load Management', score: 45, insight: 'Environmental friction is currently absorbing 55% of your available output.' },
-                    { title: 'Decision Integrity', score: 91, insight: 'Decisions are mapping to core values at an elite frequency.' }
-                ],
-                behaviorLogs: [
-                    { id: 1, input: 'Sleep < 6h + High Caffeine', output: 'Short-term focus, high irritability', correlation: 94 },
-                    { id: 2, input: 'Morning Deep Work > 3h', output: 'Evening satisfaction, low social anxiety', correlation: 82 },
-                    { id: 3, input: 'Open Calendar (No Blocks)', output: 'High fragmentation, zero advancement', correlation: 89 }
-                ],
-                decisions: [
-                    { title: 'Turned down the Director role', category: 'Career', date: '12 Oct 2024', result: 'Optimized', logic: 'The role offered more money but destroyed my "Architect" node triggers. It was a trade of money for structural freedom.', audit: 'A pure structural win. Long-term SIQ increased.' },
-                    { title: 'Postponed the software launch', category: 'Project', date: '04 Oct 2024', result: 'Oscillation', logic: 'Felt like it wasn\'t "perfect." Fear of failure masquerading as quality control.', audit: 'Classic oscillation. Perfectionism is a structure that prevents resolution.' }
-                ]
-            }
-        }
-    </script>
+        /**
+         * LIFE ARCHITECTURE OS - CORE LOGIC
+         */
 
+        // --- DATA LAYER ---
+        let state = {
+            entries: []
+        };
+
+        const loadData = () => {
+            const saved = localStorage.getItem('la_os_data');
+            if (saved) {
+                state.entries = JSON.parse(saved);
+                renderHistory();
+            }
+        };
+
+        const saveData = () => {
+            localStorage.setItem('la_os_data', JSON.stringify(state.entries));
+        };
+
+        // --- LOGIC LAYER (The "Brain") ---
+
+        // Normalizes text for better pattern matching
+        const normalize = (text) => text.toLowerCase().trim().replace(/[^\w\s]/gi, '');
+
+        const detectPatterns = (currentInput) => {
+            const normalizedInput = normalize(currentInput);
+            const matches = state.entries.filter(e => normalize(e.input) === normalizedInput);
+            
+            const outputs = matches.map(m => normalize(m.output));
+            const uniqueOutputs = [...new Set(outputs)];
+            
+            return {
+                count: matches.length,
+                uniqueOutputs: uniqueOutputs,
+                isOscillating: uniqueOutputs.length > 1,
+                lastOutput: matches.length > 0 ? matches[matches.length - 1].output : null
+            };
+        };
+
+        const generateResponse = (entry) => {
+            const analysis = detectPatterns(entry.input);
+            
+            // This structure is future-proofed for OpenAI API replacement
+            let response = {
+                observation: `You recorded an external input: "${entry.input}". Your selected response was: "${entry.output}".`,
+                pattern: "New data point. Insufficient history for pattern detection.",
+                interpretation: "Initial architecture entry.",
+                action: "Observe if this input recurs within the next 72 hours.",
+                question: "What was the physiological feeling right before you responded?"
+            };
+
+            if (analysis.count > 0) {
+                const totalOccurrences = analysis.count + 1;
+                response.pattern = `This input has occurred ${totalOccurrences} times.`;
+
+                if (analysis.isOscillating) {
+                    response.interpretation = "OSCILLATION DETECTED: You are responding differently to the same structural input. This indicates system instability.";
+                    response.action = "Identify which of your previous responses led to a better long-term outcome and standardize it.";
+                } else {
+                    response.interpretation = "STABLE PATTERN: Your system has a consistent output for this input.";
+                    response.action = "Evaluate if this consistent output serves your long-term architecture or if it's a legacy habit.";
+                }
+            }
+
+            return response;
+        };
+
+        // --- UI LAYER ---
+
+        const handleSubmission = () => {
+            const inputEl = document.getElementById('input-field');
+            const outputEl = document.getElementById('output-field');
+
+            if (!inputEl.value || !outputEl.value) {
+                alert("Both fields are required for analysis.");
+                return;
+            }
+
+            const newEntry = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                input: inputEl.value,
+                output: outputEl.value
+            };
+
+            // Generate structured response before saving to history
+            const response = generateResponse(newEntry);
+
+            // Save
+            state.entries.push(newEntry);
+            saveData();
+
+            // Display Response
+            displayResponse(response);
+
+            // Reset Form & Refresh History
+            inputEl.value = '';
+            outputEl.value = '';
+            renderHistory();
+        };
+
+        const displayResponse = (res) => {
+            const panel = document.getElementById('response-panel');
+            panel.style.display = 'block';
+
+            document.getElementById('res-observation').innerText = res.observation;
+            document.getElementById('res-pattern').innerText = res.pattern;
+            document.getElementById('res-interpretation').innerText = res.interpretation;
+            document.getElementById('res-action').innerText = res.action;
+            
+            if (res.question) {
+                document.getElementById('res-question-wrapper').style.display = 'block';
+                document.getElementById('res-question').innerText = res.question;
+            }
+
+            panel.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        const renderHistory = () => {
+            const container = document.getElementById('history-container');
+            container.innerHTML = '';
+
+            // Render in reverse chronological order
+            [...state.entries].reverse().forEach(entry => {
+                // Check patterns for labels
+                const matches = state.entries.filter(e => normalize(e.input) === normalize(entry.input));
+                const uniqueOutputs = [...new Set(matches.map(m => normalize(m.output)))];
+                
+                const card = document.createElement('div');
+                card.className = 'entry-card';
+                
+                let tags = '';
+                if (matches.length > 1) {
+                    tags += `<span class="tag tag-pattern">PATTERN: ${matches.length}x</span> `;
+                }
+                if (uniqueOutputs.length > 1) {
+                    tags += `<span class="tag tag-oscillation">OSCILLATION</span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="entry-header">
+                        <span>${new Date(entry.timestamp).toLocaleString()}</span>
+                        <span>ID: ${entry.id.toString().slice(-4)}</span>
+                    </div>
+                    <div class="entry-grid">
+                        <div>
+                            <div class="response-label">Input</div>
+                            <div>${entry.input}</div>
+                        </div>
+                        <div>
+                            <div class="response-label">Output</div>
+                            <div>${entry.output}</div>
+                        </div>
+                    </div>
+                    <div>${tags}</div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        // Initialize App
+        window.onload = loadData;
+
+    </script>
 </body>
 </html>
